@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title> Call Of Duty - ALL STORE</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+color:white;
+}
+
+.navbar{
+background:#111;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #00aeff;
+box-shadow:0 0 15px #00aeff33;
+}
+
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#00aeff;
+}
+
+.back{
+text-decoration:none;
+background:#00aeff;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+font-weight:bold;
+}
+
+.banner{
+width:100%;
+height:220px;
+overflow:hidden;
+}
+
+.banner img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.container{
+max-width:700px;
+margin:20px auto;
+padding:15px;
+}
+
+.card{
+background:#181818;
+border:2px solid #00aeff;
+border-radius:15px;
+padding:20px;
+box-shadow:0 0 15px #00aeff22;
+}
+
+label{
+display:block;
+margin-top:15px;
+margin-bottom:8px;
+font-weight:bold;
+color:#00aeff;
+}
+
+input,select{
+width:100%;
+padding:12px;
+background:#222;
+color:white;
+border:2px solid #333;
+border-radius:10px;
+outline:none;
+font-size:15px;
+margin-bottom:10px;
+}
+
+input:focus,
+select:focus{
+border-color:#00aeff;
+box-shadow:0 0 10px #00aeff55;
+}
+
+#hargaTotal{
+margin-top:15px;
+padding:15px;
+background:#111;
+border:2px solid #00aeff;
+border-radius:10px;
+font-size:18px;
+font-weight:bold;
+color:#00ff88;
+text-align:center;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+background:#00aeff;
+color:white;
+font-size:18px;
+font-weight:bold;
+border:none;
+border-radius:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#0090d4;
+}
+
+.ringkasan{
+margin-top:20px;
+padding:15px;
+background:#111;
+border:2px solid #00aeff;
+border-radius:10px;
+}
+
+.ringkasan h3{
+text-align:center;
+color:#00aeff;
+margin-bottom:10px;
+}
+
+.ringkasan p{
+margin:8px 0;
+}
+
+.peringatan{
+position:relative;
+background:#2b1b00;
+border:2px solid #ffb300;
+color:#ffd54f;
+padding:15px;
+border-radius:10px;
+margin-top:20px;
+line-height:1.6;
+}
+
+.close{
+position:absolute;
+top:10px;
+right:15px;
+font-size:22px;
+cursor:pointer;
+font-weight:bold;
+color:white;
+}
+
+.close:hover{
+color:red;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">🔥 ALL STORE</div>
+
+<a href="topupgame.html" class="back">⬅ Kembali</a>
+
+</div>
+
+<div class="banner">
+
+<img src="https://i.ibb.co.com/ycBTxhb1/1782832267955.jpg" alt="Call Of Duty">
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>🔥 Top Up Call Of Duty</h2>
+
+<label>🆔 User ID</label>
+<input type="text" id="uid" placeholder="Masukkan User ID">
+
+<label>🌍 Zone ID</label>
+<input type="text" id="server" placeholder="Masukkan Zone ID">
+
+<label>💎 Pilih Produk</label>
+<select id="produk">
+<option value="">-- Pilih Produk --</option>
+</select>
+
+<label>💳 Metode Pembayaran</label>
+<select id="payment">
+<option>DANA</option>
+<option>GoPay</option>
+<option>OVO</option>
+<option>ShopeePay</option>
+<option>QRIS</option>
+</select>
+
+<div id="hargaTotal">
+💰 Total Harga: Rp0
+</div>
+
+<button id="pesanBtn">
+🟢 Pesan Sekarang
+</button>
+
+<div class="ringkasan">
+
+<h3>📋 Ringkasan Pesanan</h3>
+
+<p id="ringProduk">💎 Produk : -</p>
+
+<p id="ringHarga">💰 Harga : Rp0</p>
+
+</div>
+
+<div id="peringatan" class="peringatan">
+
+<span class="close" onclick="tutupPeringatan()">&times;</span>
+
+<b>⚠️ PERHATIAN!</b><br><br>
+
+• Pastikan User ID dan Server sudah benar.<br>
+• Kesalahan pengisian data bukan tanggung jawab Admin ALL STORE.<br>
+• Pesanan yang sudah diproses tidak dapat dibatalkan atau direfund.
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const daftarProduk = [
+{nama:"31 CP", harga:6000},
+{nama:"63 CP", harga:11000},
+{nama:"128 CP", harga:22000},
+{nama:"321 CP", harga:53000},
+{nama:"645 CP", harga:105000},
+{nama:"800 CP", harga:126000},
+{nama:"1373 CP", harga:210000},
+{nama:"2060 CP", harga:315000},
+{nama:"2750 CP", harga:400000},
+{nama:"3564 CP", harga:525000},
+{nama:"5618 CP", harga:780000},
+{nama:"7656 CP", harga:1040000},
+{nama:"15312 CP", harga:2080000},
+{nama:"38280 CP", harga:5150000},
+{nama:"76560 CP", harga:10300000}
+];
+
+const produk = document.getElementById("produk");
+
+produk.innerHTML = '<option value="">-- Pilih Produk --</option>';
+
+daftarProduk.forEach(item=>{
+produk.innerHTML += `
+<option value="${item.harga}">
+${item.nama} - Rp${item.harga.toLocaleString("id-ID")}
+</option>`;
+});
+
+produk.addEventListener("change", function(){
+
+let harga = this.value || 0;
+let teks = this.options[this.selectedIndex].text;
+
+document.getElementById("hargaTotal").innerHTML =
+"💰 Total Harga: Rp"+Number(harga).toLocaleString("id-ID");
+
+document.getElementById("ringProduk").innerHTML =
+"💎 Produk : "+teks;
+
+document.getElementById("ringHarga").innerHTML =
+"💰 Harga : Rp"+Number(harga).toLocaleString("id-ID");
+
+});
+
+document.getElementById("pesanBtn").addEventListener("click", function(){
+
+let uid=document.getElementById("uid").value;
+let server=document.getElementById("server").value;
+let pembayaran=document.getElementById("payment").value;
+
+if(uid==""){
+alert("Masukkan User ID!");
+return;
+}
+
+if(produk.value==""){
+alert("Pilih produk terlebih dahulu!");
+return;
+}
+
+let pesan=`Halo Admin ALL STORE
+
+Saya ingin Top Up Call Of Duty.
+
+🆔 UID : ${uid}
+🌍 Server : ${server}
+
+💎 Produk : ${produk.options[produk.selectedIndex].text}
+
+💰 Harga : Rp${Number(produk.value).toLocaleString("id-ID")}
+
+💳 Pembayaran : ${pembayaran}
+
+Terima kasih.`;
+
+window.open(
+"https://wa.me/6281545462473?text="+encodeURIComponent(pesan)
+);
+
+});
+
+function tutupPeringatan(){
+document.getElementById("peringatan").style.display="none";
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APK PREMIUM - ALL STORE</title>
+
+<style>
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.navbar{
+background:#111;
+padding:15px;
+border-bottom:2px solid #00aeff;
+text-align:center;
+position:sticky;
+top:0;
+z-index:1000;
+box-shadow:0 0 10px #00aeff44;
+}
+
+.navbar h1{
+color:#00aeff;
+margin:0;
+font-size:28px;
+}
+
+.navmenu{
+margin-top:10px;
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.navmenu a{
+color:white;
+text-decoration:none;
+font-size:14px;
+padding:8px 12px;
+border-radius:8px;
+background:#161616;
+}
+
+.search-box{
+margin-top:15px;
+display:flex;
+justify-content:center;
+}
+
+.search-box input{
+width:80%;
+max-width:300px;
+padding:12px;
+border-radius:10px;
+background:#161616;
+color:white;
+border:1px solid #00aeff;
+}
+
+.light-mode{
+background:#f5f5f5;
+color:#111;
+}
+
+.light-mode .navbar{
+background:#ffffff;
+border-bottom:2px solid #00aeff;
+}
+
+.light-mode .navbar h1{
+color:#00aeff;
+}
+
+.light-mode header{
+background:#ffffff;
+border-bottom:2px solid #00aeff;
+}
+
+.light-mode header p,
+.light-mode header h2{
+color:#111;
+}
+
+.light-mode .card{
+background:#ffffff;
+color:#111;
+border:1px solid #00aeff;
+box-shadow:0 0 10px #00aeff44;
+}
+
+.light-mode .card h2{
+color:#00aeff;
+}
+
+.light-mode .navmenu a{
+background:#eeeeee;
+color:#111;
+}
+
+.light-mode .search-box input{
+background:#ffffff;
+color:#111;
+border:1px solid #00aeff;
+}
+
+.light-mode button{
+background:#00aeff;
+color:#fff;
+}
+
+.light-mode .footer{
+background:#ffffff;
+border-top:2px solid #00aeff;
+}
+
+.light-mode .footer p,
+.light-mode .footer .copy{
+color:#111;
+}
+
+.card{
+background:#161616;
+border:2px solid #00aeff;
+border-radius:15px;
+padding:10px;
+margin-bottom:15px;
+transition:0.3s;
+
+box-shadow:
+0 0 5px #00aeff,
+0 0 10px #00aeff44;
+
+overflow:hidden;
+}
+
+.card:hover{
+transform:scale(1.03);
+
+box-shadow:
+0 0 10px #00aeff,
+0 0 20px #00aeff;
+}
+
+.card img{
+width:100%;
+height:120px;
+object-fit:cover;
+display:block;
+border-radius:10px;
+}
+
+.card h2{
+font-size:14px;
+color:#00aeff;
+margin:8px 0;
+text-align:center;
+}
+
+.card button{
+background:#00aeff;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+font-weight:bold;
+width:100%;
+cursor:pointer;
+}
+
+.card button:hover{
+background:#0090d4;
+
+box-shadow:
+0 0 10px #00aeff,
+0 0 20px #00aeff;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<h1>ALL STORE</h1>
+
+<div class="navmenu">
+<a href="index.html">Home</a>
+<a href="topupgame.html">Game</a>
+<a href="apkpremium.html">Premium</a>
+</div>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Cari Apk Premium..." onkeyup="searchCard()">
+</div>
+
+</div>
+
+<div class="grid">
+  
+<div class="card">
+   <img src="https://i.ibb.co.com/DPv55NxT/1782845068647.jpg">
+<h2>CapCut Pro</h2>
+<button onclick="location.href='capcutpro.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/pj0hDHrY/1782844874611.jpg">
+<h2>Canva Pro</h2>
+<button onclick="location.href='canva.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/zW1bQGcL/1782845088201.jpg">
+<h2>ChatGPT</h2>
+<button onclick="location.href='chatgptpro.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/qYmczyZ3/1782844949700.jpg">
+<h2>Disney+</h2>
+<button onclick="location.href='disney.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/XrpXNKSP/1782844965634.jpg">
+<h2>Rcti+</h2>
+<button onclick="window.open('https://wa.me/6281545462473?text=Halo%20saya%20mau%20Rcti%20tuan%20muda')">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/0zR8Vj7/1782845037650.jpg">
+<h2>Spotify</h2>
+<button onclick="location.href='spotify.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/jvX1cF32/1782844987146.jpg">
+<h2>Vidio</h2>
+<button onclick="location.href='vidio.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/x8d5Mc1T/1782845024160.jpg">
+<h2>iQIYI</h2>
+<button onclick="location.href='iqiyi.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/rfd3X1CS/1782844934209.jpg">
+<h2>Remini</h2>
+<button onclick="location.href='remini.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/Vc0f9JRz/1782844919208.jpg">
+<h2>Grok Ai</h2>
+<button onclick="location.href='grok.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/V7vtX7V/1782845006131.jpg">
+<h2>Netflix</h2>
+<button onclick="location.href='netflix.html'">
+Order
+</button>
+</div>
+
+<div class="card">
+  <img src="https://i.ibb.co.com/3ytzkZnR/1782844899843.jpg">
+<h2>Alight Motion</h2>
+<button onclick="location.href='am.html'">
+Order
+</button>
+</div>
+
+</div>
+
+<footer>
+© 2026 ALL STORE - Digital Marketplace
+</footer>
+
+<script>
+
+if(localStorage.getItem("theme")=="light"){
+document.body.classList.add("light-mode");
+}
+
+function searchCard(){
+
+let input = document.getElementById("searchInput").value.toLowerCase();
+
+let cards = document.getElementsByClassName("card");
+
+for(let i=0; i<cards.length; i++){
+
+let title = cards[i].getElementsByTagName("h2")[0].innerText.toLowerCase();
+
+if(title.includes(input)){
+cards[i].style.display = "";
+}else{
+cards[i].style.display = "none";
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

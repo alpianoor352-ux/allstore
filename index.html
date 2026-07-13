@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALL STORE</title>
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0d0d0d;
+    color:white;
+}
+
+.navbar{
+background:#111;
+padding:15px;
+border-bottom:2px solid #00aeff;
+text-align:center;
+
+position:sticky;
+top:0;
+z-index:1000;
+
+position:relative;
+
+box-shadow:
+0 0 10px #00aeff44;
+}
+
+.theme-btn{
+position:absolute;
+top:10px;
+right:10px;
+
+padding:5px 8px;
+font-size:10px;
+width:32px;
+height:32px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:rgba(255,255,255,0.08);
+color:white;
+
+border:1px solid rgba(0,174,255,0.5);
+border-radius:20px;
+
+box-shadow:none;
+
+opacity:0.8;
+transition:0.3s;
+}
+
+.theme-btn:hover{
+opacity:1;
+background:rgba(0,174,255,0.2);
+box-shadow:0 0 10px #00aeff;
+}
+
+.navbar h1{
+color:#00aeff;
+margin:0;
+font-size:28px;
+}
+
+.navmenu{
+margin-top:10px;
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.navmenu a{
+color:white;
+text-decoration:none;
+font-size:14px;
+padding:8px 12px;
+border-radius:8px;
+background:#161616;
+
+transition:0.3s;
+}
+
+.navmenu a:hover{
+background:#00aeff;
+
+box-shadow:
+0 0 10px #00aeff;
+}
+
+.search-box{
+margin-top:15px;
+display:flex;
+justify-content:center;
+}
+
+.search-box input{
+width:80%;
+max-width:300px;
+
+padding:12px;
+border:none;
+outline:none;
+
+border-radius:10px;
+
+background:#161616;
+color:white;
+
+border:1px solid #00aeff;
+
+box-shadow:
+0 0 10px #00aeff44;
+}
+
+header{
+    background:#111;
+    padding:20px;
+    text-align:center;
+    border-bottom:2px solid #00aeff;
+}
+
+header h1{
+    color:#00aeff;
+    margin:0;
+    font-size:35px;
+}
+
+header p{
+    color:#ccc;
+}
+
+.container{
+    padding:20px;
+}
+
+.card{
+background:#161616;
+border:1px solid #00aeff;
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+
+transition:0.3s ease;
+
+box-shadow:0 0 10px #00aeff44;
+}
+
+.card:hover{
+transform:translateY(-5px);
+
+box-shadow:
+0 0 10px #00aeff,
+0 0 20px #00aeff,
+0 0 40px #00aeff;
+}
+
+.card h2{
+    color:#00aeff;
+}
+
+ul{
+    padding-left:20px;
+}
+
+button{
+background:#00aeff;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+
+transition:0.3s ease;
+
+box-shadow:
+0 0 10px #00aeff44;
+}
+
+button:hover{
+transform:scale(1.05);
+
+box-shadow:
+0 0 10px #00aeff,
+0 0 20px #00aeff,
+0 0 40px #00aeff;
+}
+
+.light-mode{
+background:#f5f5f5;
+color:#111;
+}
+
+.light-mode .navbar{
+background:#ffffff;
+border-bottom:2px solid #00aeff;
+}
+
+.light-mode .navbar h1{
+color:#00aeff;
+}
+
+.light-mode header{
+background:#ffffff;
+border-bottom:2px solid #00aeff;
+}
+
+.light-mode header p,
+.light-mode header h2{
+color:#111;
+}
+
+.light-mode .card{
+background:#ffffff;
+color:#111;
+border:1px solid #00aeff;
+box-shadow:0 0 10px #00aeff44;
+}
+
+.light-mode .card h2{
+color:#00aeff;
+}
+
+.light-mode .navmenu a{
+background:#eeeeee;
+color:#111;
+}
+
+.light-mode .search-box input{
+background:#ffffff;
+color:#111;
+border:1px solid #00aeff;
+}
+
+.light-mode button{
+background:#00aeff;
+color:#fff;
+}
+
+.light-mode .footer{
+background:#ffffff;
+border-top:2px solid #00aeff;
+}
+
+.light-mode .footer p,
+.light-mode .footer .copy{
+color:#111;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    color:#aaa;
+}
+
+#loading{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0d0d0d;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.loader{
+width:60px;
+height:60px;
+border:5px solid #222;
+border-top:5px solid #00aeff;
+border-radius:50%;
+animation:spin 1s linear infinite;
+
+box-shadow:0 0 20px #00aeff;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+#loading p{
+color:#00aeff;
+margin-top:15px;
+font-weight:bold;
+}
+
+.whatsapp{
+position:fixed;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
+background:#25D366;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+text-decoration:none;
+font-size:30px;
+color:white;
+box-shadow:0 0 15px #25D366;
+z-index:9999;
+transition:0.3s;
+}
+
+.whatsapp:hover{
+transform:scale(1.1);
+box-shadow:
+0 0 15px #25D366,
+0 0 30px #25D366;
+}
+
+.whatsapp img{
+width:35px;
+height:35px;
+}
+
+@keyframes pulse{
+0%{
+transform:scale(1);
+box-shadow:0 0 15px #25D366;
+}
+50%{
+transform:scale(1.1);
+box-shadow:0 0 30px #25D366;
+}
+100%{
+transform:scale(1);
+box-shadow:0 0 15px #25D366;
+}
+}
+
+.whatsapp{
+animation:pulse 1.5s infinite;
+}
+
+.footer{
+background:#111;
+text-align:center;
+padding:25px;
+margin-top:20px;
+
+border-top:2px solid #00aeff;
+
+box-shadow:
+0 0 10px #00aeff44;
+}
+
+.footer h3{
+color:#00aeff;
+margin:0;
+font-size:22px;
+}
+
+.footer p{
+color:#aaa;
+margin:5px 0;
+}
+
+.footer-menu{
+display:flex;
+flex-direction:column;
+gap:8px;
+margin:15px 0;
+}
+
+.footer-menu a{
+color:#ccc;
+text-decoration:none;
+font-size:14px;
+transition:0.3s;
+}
+
+.footer-menu a:hover{
+color:#00aeff;
+text-shadow:0 0 10px #00aeff;
+}
+
+.footerline{
+width:60%;
+height:2px;
+background:#00aeff;
+margin:10px auto;
+
+box-shadow:
+0 0 10px #00aeff;
+}
+
+.footer .copy{
+font-size:12px;
+color:#666;
+margin-top:10px;
+}
+
+<a href="https://wa.me/6281545462473" class="whatsapp" target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+</a>
+
+</style>
+</head>
+<body>
+  
+  <div id="loading">
+<div class="loader"></div>
+<p>Loading ALL STORE...</p>
+</div>
+  
+<div class="navbar">
+
+<h1>ALL STORE</h1>
+
+<div class="navmenu">
+<a href="index.html">Home</a>
+<a href="topupgame.html">Game</a>
+<a href="apkpremium.html">Premium</a>
+</div>
+
+<button id="themeBtn" class="theme-btn" onclick="toggleTheme()">🌙</button>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Cari layanan..." onkeyup="searchCard()">
+</div>
+
+</div>
+
+<header>
+
+<p>Trusted Digital Marketplace</p>
+
+<div class="welcome">
+
+<h2>FAST • SAFE • TRUSTED</h2>
+
+<p>
+Top Up Game • Premium Apps • SMM Panel •
+Pulsa & Digital Products
+</p>
+
+</div>
+
+</header>
+
+<div class="container">
+  
+<div class="card">
+    <h2>📱 Desin & Dokumen</h2>
+    <ul>
+        <li>Cv</li>
+        <li>Lamaran Kerja</li>
+        <li>Logo</li>
+        <li>Poster AI</li>
+        <li>Sertifikat</li>
+</ul>
+
+<center>
+<a href="desain.html">
+<button>Lihat Desain & Dokumen</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+
+<h2>🎮 Top Up Game</h2>
+
+<ul>
+    <li>Mobile Legends</li>
+    <li>Free Fire</li>
+    <li>PUBG Mobile</li>
+    <li>FC Mobile</li>
+    <li>COD Mobile</li>
+</ul>
+
+<center>
+<a href="topupgame.html">
+<button>Lihat Top Up Game</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>📱 Premium Apps</h2>
+    <ul>
+        <li>Canva Pro</li>
+        <li>Netflix</li>
+        <li>Spotify</li>
+        <li>ChatGPT</li>
+        <li>CapCut Pro</li>
+</ul>
+
+<center>
+<a href="apkpremium.html">
+<button>Lihat Apk Premium</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>📈 Social Media Services</h2>
+    <ul>
+        <li>Followers</li>
+        <li>Likes</li>
+        <li>Views</li>
+        <li>save</li>
+</ul>
+
+<center>
+<a href="smmpanel.html">
+<button>Lihat Sosial Media Services</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>📂 Digital Products</h2>
+    <ul>
+        <li>Font Premium</li>
+        <li>Ebook</li>
+        <li>Database WhatsApp</li>
+        <li>Preset Editing</li>
+</ul>
+
+<center>
+<a href="digital.html">
+<button>Lihat Digital Products</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>📶 Pulsa & Data</h2>
+    <ul>
+        <li>Telkomsel</li>
+        <li>XL Axis</li>
+        <li>My Im3</li>
+        <li>by.U</li>
+        <li>Smartfren</li>
+</ul>
+
+<center>
+<a href="pulsa.html">
+<button>Lihat Pulsa dan data</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>⚡ Top Up Tagihan</h2>
+    <ul>
+        <li>PLN</li>
+        <li>BPJS</li>
+        <li>PDAM</li>
+</ul>
+
+<center>
+<a href="topuptagihan.html">
+<button>Lihat Top Up Tagihan</button>
+</a>
+</center>
+
+</div>
+
+<div class="card">
+    <h2>📱 Jual Beli Akun Sosmed/game</h2>
+    <ul>
+        <li>Akun TikTok</li>
+        <li>Akun Instagram</li>
+        <li>Akun Facebook</li>
+        <li>Akun YouTube</li>
+        <li>Akun CapCut</li>
+        <li>Akun Canva</li>
+</ul>
+
+<center>
+<a href="jualbeliakun.html">
+<button>Lihat Jual Beli Akun</button>
+</a>
+</center>
+
+</div>
+
+<footer class="footer">
+<h3>ALL STORE</h3>
+<p>Trusted Digital Marketplace</p>
+
+<div class="footer-menu">
+<a href="informasi.html">Informasi</a>
+<a href="syarat.html">Syarat & Ketentuan</a>
+<a href="privasi.html">Kebijakan Privasi</a>
+<a href="faq.html">FAQ & Bantuan</a>
+</div>
+
+<div class="footerline"></div>
+
+<p class="copy">© 2026 ALL STORE - All Rights Reserved</p>
+</footer>
+
+<a href="https://wa.me/6281545462473" class="whatsapp" target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+</a>
+
+<script>
+
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        document.getElementById("loading").style.display = "none";
+    }, 2000);
+});
+
+if(localStorage.getItem("theme")=="light"){
+    document.body.classList.add("light-mode");
+    document.getElementById("themeBtn").innerHTML="☀️";
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("light-mode");
+
+let btn = document.getElementById("themeBtn");
+
+if(document.body.classList.contains("light-mode")){
+    btn.innerHTML = "☀️";
+    localStorage.setItem("theme","light");
+}else{
+    btn.innerHTML = "🌙";
+    localStorage.setItem("theme","dark");
+}
+
+}
+
+function searchCard() {
+
+let input = document.getElementById("searchInput").value.toLowerCase();
+
+let cards = document.querySelectorAll(".card");
+
+cards.forEach(card => {
+
+let text = card.innerText.toLowerCase();
+
+if(text.includes(input)){
+card.style.display = "block";
+}else{
+card.style.display = "none";
+}
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
