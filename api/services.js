@@ -1,26 +1,26 @@
 export default async function handler(req, res) {
   try {
+    const body = new URLSearchParams({
+      api_id: process.env.API_ID,
+      api_key: process.env.API_KEY,
+      secret_key: process.env.SECRET_KEY,
+    });
+
     const response = await fetch("https://ordersosmed.id/api-1/service", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        api_id: process.env.API_ID,
-        api_key: process.env.API_KEY,
-        secret_key: process.env.SECRET_KEY
-      })
+      body: body.toString(),
     });
 
     const text = await response.text();
-    console.log(text);
-
     res.status(200).send(text);
 
   } catch (err) {
     res.status(500).json({
       response: false,
-      msg: err.message
+      msg: err.message,
     });
   }
-}
+      }
