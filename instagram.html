@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Instagram - ALL STORE</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+color:white;
+}
+
+.navbar{
+background:#111;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #00aeff;
+box-shadow:0 0 15px rgba(0,174,255,.35);
+}
+
+.logo{
+font-size:25px;
+font-weight:bold;
+color:#00aeff;
+}
+
+.back{
+text-decoration:none;
+background:#00aeff;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+font-weight:bold;
+}
+
+.banner{
+width:100%;
+height:220px;
+overflow:hidden;
+}
+
+.banner img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.container{
+max-width:900px;
+margin:25px auto;
+padding:15px;
+}
+
+.card{
+background:#181818;
+border:2px solid #00aeff;
+border-radius:15px;
+padding:20px;
+box-shadow:0 0 20px rgba(0,174,255,.25);
+}
+
+select{
+width:100%;
+padding:13px;
+background:#222;
+color:white;
+border:2px solid #333;
+border-radius:10px;
+font-size:16px;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+select:focus{
+border-color:#00aeff;
+outline:none;
+}
+
+.card-info{
+margin-top:15px;
+padding:15px;
+background:#111;
+border:2px solid #00aeff;
+border-radius:12px;
+line-height:2;
+}
+
+.card-info p{
+font-size:16px;
+}
+
+input{
+width:100%;
+padding:13px;
+background:#222;
+color:white;
+border:2px solid #333;
+border-radius:10px;
+font-size:16px;
+margin-bottom:15px;
+}
+
+input:focus{
+border-color:#00aeff;
+outline:none;
+box-shadow:0 0 12px rgba(0,174,255,.5);
+}
+
+</style>
+
+</head>
+
+<body>
+  
+  <div class="navbar">
+
+<div class="logo">🔥 ALL STORE</div>
+
+<a href="smmpanel.html" class="back">⬅ Kembali</a>
+
+</div>
+
+<div class="banner">
+
+<img src="https://i.ibb.co.com/vx1NXbz8/1782866857884.jpg" alt="Instagram Banner">
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h1 style="text-align:center;color:#00aeff;">
+Instagram 
+</h1>
+
+<p style="text-align:center;color:#bbb;margin-top:10px;">
+Pilih kategori layanan Instagram yang ingin kamu pesan.
+</p>
+
+<hr style="margin:30px 0;border:1px solid #333;">
+
+<h2 style="color:#00aeff;margin-bottom:10px;">
+📂 Pilih Kategori
+</h2>
+
+<select id="kategori" onchange="gantiKategori()">
+
+<option value="">-- Pilih Kategori --</option>
+
+</select>
+
+<br><br>
+
+<h2 style="color:#00aeff;margin-bottom:10px;">
+📦 Pilih Jenis Layanan
+</h2>
+
+<select id="layanan" onchange="tampilInfo()">
+
+<option value="">Pilih kategori terlebih dahulu</option>
+
+</select>
+
+<div id="infoLayanan" class="card-info">
+
+<p>📦 Minimal : <span id="min">-</span></p>
+
+<p>📦 Maksimal : <span id="max">-</span></p>
+
+<p>💰 Harga /1000 : <span id="harga">-</span></p>
+
+</div>
+
+<hr style="margin:25px 0;border:1px solid #333;">
+
+<h2 style="color:#00aeff;margin-bottom:10px;">
+🔢 Jumlah Pesanan
+</h2>
+
+<input type="number" id="jumlah" placeholder="Masukkan jumlah pesanan" oninput="hitungTotal()">
+
+<h2 style="color:#00aeff;margin-top:20px;margin-bottom:10px;">
+💰 Total Harga
+</h2>
+
+<div id="totalHarga" class="card-info">
+
+Rp0
+
+</div>
+
+<h2 style="color:#00aeff;margin-top:20px;margin-bottom:10px;">
+🔗 Link Target
+</h2>
+
+<input type="url"
+id="link"
+placeholder="https://instagram.com/....">
+
+<h2 style="color:#00aeff;margin-top:20px;margin-bottom:10px;">
+💳 Metode Pembayaran
+</h2>
+
+<select id="payment">
+
+<option>DANA</option>
+
+<option>GoPay</option>
+
+<option>OVO</option>
+
+<option>ShopeePay</option>
+
+<option>QRIS</option>
+
+</select>
+
+<h2 style="color:#00aeff;margin-top:20px;margin-bottom:10px;">
+📋 Ringkasan Pesanan
+</h2>
+
+<div class="card-info">
+
+<p>📂 Kategori : <span id="ringKategori">-</span></p>
+
+<p>📦 Layanan : <span id="ringLayanan">-</span></p>
+
+<p>🔢 Jumlah : <span id="ringJumlah">-</span></p>
+
+<p>💰 Total : <span id="ringTotal">Rp0</span></p>
+
+</div>
+
+<br>
+
+<button onclick="pesanWA()" style="
+width:100%;
+padding:15px;
+background:#00aeff;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 15px rgba(0,174,255,.5);
+">
+
+🟢 Pesan Sekarang
+
+</button>
+
+</div>
+
+
+<script>
+  
+let data = {};
+
+async function loadServices() {
+
+  const res = await fetch("/api/service");
+  const result = await res.json();
+
+  console.log(result);
+  
+  const kategori = document.getElementById("kategori");
+
+kategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+
+data = {};
+
+result.data.forEach(service => {
+
+  if (!service.category_name.toLowerCase().includes("instagram")) {
+    return;
+  }
+
+  if (!data[service.category_name]) {
+
+    data[service.category_name] = [];
+
+    kategori.innerHTML += `
+      <option value="${service.category_name}">
+        ${service.category_name}
+      </option>
+    `;
+
+  }
+
+});
+
+}
+
+function tampilInfo(){
+
+const kategori=document.getElementById("kategori").value;
+const index=document.getElementById("layanan").value;
+
+if(kategori=="" || index=="") return;
+
+const item=data[kategori][index];
+
+document.getElementById("min").innerHTML=item.min.toLocaleString("id-ID");
+
+document.getElementById("max").innerHTML=item.max.toLocaleString("id-ID");
+
+document.getElementById("harga").innerHTML=
+"Rp"+item.harga.toLocaleString("id-ID");
+
+document.getElementById("ringKategori").innerHTML =
+document.getElementById("kategori").options[
+document.getElementById("kategori").selectedIndex
+].text;
+
+document.getElementById("ringLayanan").innerHTML =
+item.nama;
+
+}
+
+function hitungTotal(){
+
+const kategori=document.getElementById("kategori").value;
+const index=document.getElementById("layanan").value;
+const jumlah=parseInt(document.getElementById("jumlah").value)||0;
+
+if(kategori=="" || index==""){
+document.getElementById("totalHarga").innerHTML="Rp0";
+return;
+}
+
+const item=data[kategori][index];
+
+if(jumlah < item.min && jumlah != 0){
+alert("Minimal pembelian "+item.min.toLocaleString("id-ID"));
+document.getElementById("jumlah").value=item.min;
+return;
+}
+
+if(jumlah > item.max){
+alert("Maksimal pembelian "+item.max.toLocaleString("id-ID"));
+document.getElementById("jumlah").value=item.max;
+return;
+}
+
+const total=(jumlah/1000)*item.harga;
+
+document.getElementById("totalHarga").innerHTML=
+"Rp"+total.toLocaleString("id-ID");
+
+document.getElementById("ringJumlah").innerHTML =
+jumlah.toLocaleString("id-ID");
+
+document.getElementById("ringTotal").innerHTML =
+"Rp"+total.toLocaleString("id-ID");
+
+}
+
+function pesanWA(){
+
+const kategori=document.getElementById("kategori");
+const layanan=document.getElementById("layanan");
+const jumlah=document.getElementById("jumlah").value;
+const link=document.getElementById("link").value;
+const payment=document.getElementById("payment").value;
+
+if(kategori.value==""){
+alert("Pilih kategori terlebih dahulu!");
+return;
+}
+
+if(layanan.value==""){
+alert("Pilih layanan terlebih dahulu!");
+return;
+}
+
+if(jumlah==""){
+alert("Masukkan jumlah pesanan!");
+return;
+}
+
+if(link==""){
+alert("Masukkan link target!");
+return;
+}
+
+const item=data[kategori.value][layanan.value];
+
+const total=(jumlah/1000)*item.harga;
+
+const pesan=
+`Halo Admin ALL STORE
+
+Saya ingin memesan layanan Instagram.
+
+📂 Kategori : ${kategori.options[kategori.selectedIndex].text}
+
+📦 Layanan : ${item.nama}
+
+🔢 Jumlah : ${jumlah}
+
+🔗 Link :
+${link}
+
+💳 Pembayaran :
+${payment}
+
+💰 Total :
+Rp${total.toLocaleString("id-ID")}
+
+Apakah stok masih tersedia?`;
+
+window.open(
+"https://wa.me/6281545462473?text="+encodeURIComponent(pesan)
+);
+
+}
+
+</script>
+
+</body>
+
+</html>
