@@ -273,39 +273,28 @@ box-shadow:0 0 15px rgba(0,174,255,.5);
 let data = {};
 
 async function loadServices() {
+  try {
+    const res = await fetch("https://allstore-tan.vercel.app/api/services");
+    const result = await res.json();
 
-  const res = await fetch("/api/service");
-  const result = await res.json();
+    data = result.data;
 
-  console.log(result);
-  
-  const kategori = document.getElementById("kategori");
+    const kategori = document.getElementById("kategori");
 
-kategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+    kategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
 
-data = {};
+    const daftarKategori = [...new Set(data.map(item => item.category_name))];
 
-result.data.forEach(service => {
+    daftarKategori.forEach((nama) => {
+      kategori.innerHTML += `<option value="${nama}">${nama}</option>`;
+    });
 
-  if (!service.category_name.toLowerCase().includes("instagram")) {
-    return;
+  } catch (err) {
+    alert(err.message);
   }
-
-  if (!data[service.category_name]) {
-
-    data[service.category_name] = [];
-
-    kategori.innerHTML += `
-      <option value="${service.category_name}">
-        ${service.category_name}
-      </option>
-    `;
-
-  }
-
-});
-
 }
+
+loadServices();
 
 function tampilInfo(){
 
@@ -430,6 +419,8 @@ window.open(
 );
 
 }
+
+loadServices();
 
 </script>
 
