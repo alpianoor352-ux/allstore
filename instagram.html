@@ -120,6 +120,64 @@ outline:none;
 box-shadow:0 0 12px rgba(0,174,255,.5);
 }
 
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.popup-box{
+background:#181818;
+border:2px solid #00aeff;
+border-radius:20px;
+padding:30px;
+width:90%;
+max-width:350px;
+text-align:center;
+box-shadow:0 0 25px rgba(0,174,255,0.5);
+animation:muncul 0.3s ease;
+}
+
+.popup-box h2{
+color:#00aeff;
+margin-bottom:15px;
+}
+
+.popup-box p{
+color:#ddd;
+line-height:1.7;
+margin-bottom:20px;
+}
+
+.popup-box button{
+background:#00aeff;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+font-size:16px;
+}
+
+@keyframes muncul{
+from{
+transform:scale(0.8);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
 </style>
 
 </head>
@@ -264,6 +322,20 @@ box-shadow:0 0 15px rgba(0,174,255,.5);
 🟢 Pesan Sekarang
 
 </button>
+
+</div>
+
+<div id="popup" class="popup">
+
+  <div class="popup-box">
+
+    <h2 id="popupTitle">Judul</h2>
+
+    <p id="popupText">Isi pesan</p>
+
+    <button onclick="tutupPopup()">OK</button>
+
+  </div>
 
 </div>
 
@@ -420,22 +492,34 @@ const link=document.getElementById("link").value;
 const payment=document.getElementById("payment").value;
 
 if(kategori.value==""){
-alert("Pilih kategori terlebih dahulu!");
+bukaPopup(
+"⚠️ Peringatan",
+"Pilih kategori terlebih dahulu!"
+);
 return;
 }
 
 if(layanan.value==""){
-alert("Pilih layanan terlebih dahulu!");
+bukaPopup(
+"⚠️ Peringatan",
+"Pilih layanan terlebih dahulu!"
+);
 return;
 }
 
 if(jumlah==""){
-alert("Masukkan jumlah pesanan!");
+bukaPopup(
+"⚠️ Peringatan",
+"Masukkan jumlah pesanan!"
+);
 return;
 }
 
 if(link==""){
-alert("Masukkan link target!");
+bukaPopup(
+"⚠️ Peringatan",
+"Masukkan link target!"
+);
 return;
 }
 
@@ -478,17 +562,27 @@ const result = await response.json();
 
 if (result.response) {
 
-  alert(
-`✅ Pesanan berhasil!
+  bukaPopup(
+"✅ Pesanan Berhasil",
+`Pesanan berhasil dibuat.<br><br>
+ID Order : ${result.data.id}<br>
+Total Harga : Rp${total.toLocaleString("id-ID")}`
+);
 
-ID Order : ${result.data.id}
+document.getElementById("jumlah").value = "";
+document.getElementById("link").value = "";
 
-Harga API : Rp${result.data.price.toLocaleString("id-ID")}`
-  );
+document.getElementById("totalHarga").innerHTML = "Rp0";
+
+document.getElementById("ringJumlah").innerHTML = "-";
+document.getElementById("ringTotal").innerHTML = "Rp0";
 
 } else {
 
-  alert(JSON.stringify(result));
+  bukaPopup(
+    "❌ Pesanan Gagal",
+    result.data?.msg || result.msg || "Layanan sedang tidak tersedia. Silakan pilih layanan lain."
+  );
 
 }
 
@@ -500,8 +594,41 @@ alert("Terjadi kesalahan: " + err.message);
 
 }
 
+function bukaPopup(judul, isi){
+
+const title = document.getElementById("popupTitle");
+
+title.innerHTML = judul;
+
+if(judul.includes("Berhasil")){
+title.style.color = "#00ff88";
+}
+else if(judul.includes("Peringatan")){
+title.style.color = "#ffcc00";
+}
+else{
+title.style.color = "#ff4d4d";
+}
+
+document.getElementById("popupText").innerHTML = isi;
+
+document.getElementById("popup").style.display = "flex";
+
+}
+
+function tutupPopup(){
+
+document.getElementById("popup").style.display = "none";
+
+}
+
 loadServices();
 
+</script>
+
+<script
+src="https://app.sandbox.midtrans.com/snap/snap.js"
+data-client-key="Mid-client-HJydOAmZlH6JJsi8">
 </script>
 
 </body>
