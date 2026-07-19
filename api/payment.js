@@ -8,7 +8,13 @@ export default async function handler(req, res) {
 
   try {
 
-    const { order_id, gross_amount } = req.body;
+    const {
+  order_id,
+  gross_amount,
+  service,
+  target,
+  quantity
+} = req.body;
 
     const serverKey = process.env.MIDTRANS_SERVER_KEY;
 
