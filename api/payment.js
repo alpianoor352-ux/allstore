@@ -10,6 +10,10 @@ export default async function handler(req, res) {
 
     const { order_id, gross_amount } = req.body;
 
+    const serverKey = process.env.MIDTRANS_SERVER_KEY;
+
+    const auth = Buffer.from(serverKey + ":").toString("base64");
+
   } catch (err) {
 
     return res.status(500).json({
