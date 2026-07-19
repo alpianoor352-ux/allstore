@@ -29,11 +29,22 @@ export default async function handler(req, res) {
       "Authorization": "Basic " + auth
     },
     body: JSON.stringify({
-      transaction_details: {
-        order_id,
-        gross_amount
-      }
-    })
+  transaction_details: {
+    order_id,
+    gross_amount
+  },
+  item_details: [
+    {
+      id: service,
+      name: "ALL STORE Order",
+      price: gross_amount,
+      quantity: 1
+    }
+  ],
+  customer_details: {
+    first_name: "Customer"
+  }
+})
   }
 );
 
