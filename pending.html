@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menunggu Pembayaran - ALL STORE</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+padding:20px;
+}
+
+.card{
+background:#111;
+border:1px solid #ffcc00;
+border-radius:20px;
+padding:35px;
+max-width:420px;
+width:100%;
+text-align:center;
+box-shadow:0 0 25px rgba(255,204,0,.35);
+animation:muncul .5s;
+}
+
+@keyframes muncul{
+from{
+opacity:0;
+transform:scale(.9);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+.icon{
+font-size:80px;
+margin-bottom:15px;
+animation:putar 2s linear infinite;
+}
+
+@keyframes putar{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+h1{
+color:#ffcc00;
+margin-bottom:15px;
+}
+
+p{
+color:#ddd;
+line-height:1.7;
+margin-bottom:12px;
+}
+
+.info{
+background:#1b1b1b;
+border-left:4px solid #ffcc00;
+padding:15px;
+border-radius:10px;
+margin:20px 0;
+color:#bbb;
+font-size:15px;
+text-align:left;
+}
+
+a{
+display:block;
+width:100%;
+padding:15px;
+margin-top:15px;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+transition:.3s;
+color:#fff;
+}
+
+.home{
+background:#00aeff;
+}
+
+.home:hover{
+box-shadow:0 0 15px #00aeff;
+}
+
+.admin{
+background:#25D366;
+}
+
+.admin:hover{
+box-shadow:0 0 15px #25D366;
+}
+
+.footer{
+margin-top:20px;
+color:#777;
+font-size:13px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="icon">⏳</div>
+
+<h1>Menunggu Pembayaran</h1>
+
+<p>
+Pesanan Anda telah dibuat.
+</p>
+
+<div class="info">
+Silakan selesaikan pembayaran melalui metode yang telah dipilih.<br><br>
+
+Setelah pembayaran berhasil diterima, pesanan akan diproses secara otomatis.<br><br>
+
+Jika status tidak berubah dalam beberapa menit, silakan hubungi Admin.
+</div>
+
+<a class="home" href="https://allstore-tan.vercel.app">
+🏠 Kembali ke Beranda
+</a>
+
+<a class="admin" href="https://wa.me/6281545462473">
+💬 Hubungi Admin
+</a>
+
+<div class="footer">
+© 2026 ALL STORE - Digital Marketplace
+</div>
+
+</div>
+
+</body>
+</html>
