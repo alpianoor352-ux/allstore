@@ -42,15 +42,25 @@ export default async function handler(req, res) {
     }
   ],
   customer_details: {
-    first_name: "Customer"
-  }
+  first_name: "Customer"
+},
+custom_field1: String(service),
+custom_field2: String(target),
+custom_field3: String(quantity)
 })
   }
 );
 
 const result = await response.json();
 
-return res.status(200).json(result);
+if (!response.ok) {
+  return res.status(response.status).json(result);
+}
+
+return res.status(200).json({
+  token: result.token,
+  redirect_url: result.redirect_url
+});
 
   } catch (err) {
 
