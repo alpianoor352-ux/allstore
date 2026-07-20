@@ -547,30 +547,17 @@ if (result.token) {
 
 snap.pay(result.token, {
   onSuccess: function(result) {
-    bukaPopup(
-      "✅ Pembayaran Berhasil",
-      "Pembayaran berhasil. Pesanan sedang diproses."
-    );
-  },
+  window.location.href = "sukses.html";
+},
   onPending: function(result) {
-    bukaPopup(
-      "⏳ Menunggu Pembayaran",
-      "Silakan selesaikan pembayaran."
-    );
-  },
+  window.location.href = "pending.html";
+},
   onError: function(result) {
-    bukaPopup(
-      "❌ Pembayaran Gagal",
-      "Terjadi kesalahan saat pembayaran."
-    );
-  },
+  window.location.href = "gagal.html";
+},
   onClose: function() {
-    bukaPopup(
-      "⚠️ Pembayaran Dibatalkan",
-      "Kamu menutup halaman pembayaran."
-    );
-  }
-});
+  window.location.href = "gagal.html";
+}
 
 } else {
 
