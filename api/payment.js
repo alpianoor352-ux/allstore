@@ -44,6 +44,9 @@ export default async function handler(req, res) {
   customer_details: {
   first_name: "Customer"
 },
+      callbacks: {
+  finish: "https://allstore-tan.vercel.app"
+},
 custom_field1: String(service),
 custom_field2: String(target),
 custom_field3: String(quantity)
