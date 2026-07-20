@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       name: "ALL STORE Order",
       price: gross_amount,
       quantity: 1
-    }
+    },
   ],
   customer_details: {
   first_name: "Customer"
