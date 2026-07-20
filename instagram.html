@@ -324,7 +324,7 @@ box-shadow:0 0 15px rgba(0,174,255,.5);
 
 <script>
   
-let data = {};
+let data = [];
 
 async function loadServices() {
   try {
@@ -558,6 +558,7 @@ snap.pay(result.token, {
   onClose: function() {
   window.location.href = "gagal.html";
 }
+});
 
 } else {
 
