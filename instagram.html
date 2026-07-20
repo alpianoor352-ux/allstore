@@ -546,42 +546,56 @@ const total = Math.ceil((jumlah / 1000) * hargaJual);
 
 try {
 
-const response = await fetch("https://allstore-tan.vercel.app/api/order", {
+const response = await fetch("https://allstore-tan.vercel.app/api/payment", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    service: item.id,
-    target: link,
-    quantity: jumlah
-  })
+  order_id: "ALL-" + Date.now(),
+  gross_amount: total,
+  service: item.id,
+  target: link,
+  quantity: Number(jumlah)
+})
 });
 
 const result = await response.json();
 
-if (result.response) {
+if (result.token) {
 
-  bukaPopup(
-"✅ Pesanan Berhasil",
-`Pesanan berhasil dibuat.<br><br>
-ID Order : ${result.data.id}<br>
-Total Harga : Rp${total.toLocaleString("id-ID")}`
-);
-
-document.getElementById("jumlah").value = "";
-document.getElementById("link").value = "";
-
-document.getElementById("totalHarga").innerHTML = "Rp0";
-
-document.getElementById("ringJumlah").innerHTML = "-";
-document.getElementById("ringTotal").innerHTML = "Rp0";
+snap.pay(result.token, {
+  onSuccess: function(result) {
+    bukaPopup(
+      "✅ Pembayaran Berhasil",
+      "Pembayaran berhasil. Pesanan sedang diproses."
+    );
+  },
+  onPending: function(result) {
+    bukaPopup(
+      "⏳ Menunggu Pembayaran",
+      "Silakan selesaikan pembayaran."
+    );
+  },
+  onError: function(result) {
+    bukaPopup(
+      "❌ Pembayaran Gagal",
+      "Terjadi kesalahan saat pembayaran."
+    );
+  },
+  onClose: function() {
+    bukaPopup(
+      "⚠️ Pembayaran Dibatalkan",
+      "Kamu menutup halaman pembayaran."
+    );
+  }
+});
 
 } else {
 
   bukaPopup(
-    "❌ Pesanan Gagal",
-    result.data?.msg || result.msg || "Layanan sedang tidak tersedia. Silakan pilih layanan lain."
+    "❌ Gagal",
+    "Gagal membuat pembayaran."
   );
 
 }
