@@ -208,7 +208,7 @@ box-shadow:
 <div class="card">
   <img src="https://i.ibb.co.com/vx1NXbz8/1782866857884.jpg">
 <h2>Instagram</h2>
-<button onclick="location.href='instagram.html'">
+<button onclick="konfirmasi('instagram.html')">
 Order
 </button>
 </div>
@@ -216,7 +216,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/7x22bdCW/1782866838944.jpg">
 <h2>TikTok</h2>
-<button onclick="location.href='tiktok.html'">
+<button onclick="konfirmasi('tiktok.html')">
 Order
 </button>
 </div>
@@ -224,7 +224,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/Z3HRGBr/1782866757631.jpg">
 <h2>YouTube</h2>
-<button onclick="location.href='youtube.html'">
+<button onclick="konfirmasi('youtube.html')">
 Order
 </button>
 </div>
@@ -232,7 +232,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/RTJ5f9SY/1782866799126.jpg">
 <h2>WhatsApp</h2>
-<button onclick="location.href='whatsapp.html'">
+<button onclick="konfirmasi('whatsapp.html')">
 Order
 </button>
 </div>
@@ -240,7 +240,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/BVk4CTS9/1782866771801.jpg">
 <h2>Telegram</h2>
-<button onclick="location.href='telegram.html'">
+<button onclick="konfirmasi('telegram.html')">
 Order
 </button>
 </div>
@@ -248,7 +248,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/zMgFP5J/1782866743620.jpg">
 <h2>Discord</h2>
-<button onclick="location.href='discord.html'">
+<button onclick="konfirmasi('discord.html')">
 Order
 </button>
 </div>
@@ -256,7 +256,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/HTxQPcmZ/images.png">
 <h2>Twitter</h2>
-<button onclick="location.href='x.html'">
+<button onclick="konfirmasi('x.html')">
 Order
 </button>
 </div>
@@ -264,7 +264,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/8q3mpKN/1782845037650.jpg">
 <h2>Spotify</h2>
-<button onclick="location.href='spotifysmm.html'">
+<button onclick="konfirmasi('spotifysmm.html')">
 Order
 </button>
 </div>
@@ -272,7 +272,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/60G6MK1D/1782866812231.jpg">
 <h2>Threads</h2>
-<button onclick="location.href='threads.html'">
+<button onclick="konfirmasi('threads.html')">
 Order
 </button>
 </div>
@@ -280,7 +280,7 @@ Order
 <div class="card">
   <img src="https://i.ibb.co.com/FkYn1gFy/images.jpg">
 <h2>Roblox</h2>
-<button onclick="location.href='roblox.html'">
+<button onclick="konfirmasi('roblox.html')">
 Order
 </button>
 </div>
@@ -290,6 +290,51 @@ Order
 <footer>
 © 2026 ALL STORE - Digital Marketplace
 </footer>
+
+<!-- POPUP -->
+<div id="popup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);justify-content:center;align-items:center;z-index:9999;">
+
+<div style="background:#181818;border:2px solid #00aeff;border-radius:15px;padding:20px;width:90%;max-width:350px;text-align:center;">
+
+<h2 style="color:#00aeff;">⚠️ Peringatan Sebelum Memesan</h2>
+
+<p style="line-height:1.8;text-align:left;color:#ffffff;">
+  
+• Gunakan link video atau link akun yang valid.<br><br>
+• Akun tidak boleh dalam mode private.<br><br>
+• Khusus Instagram, nonaktifkan fitur <b>Laporkan untuk Ditinjau</b>.<br><br>
+• Proses pesanan dapat memerlukan waktu.<br><br>
+• Pesanan yang sudah diproses tidak dapat dibatalkan atau direfund.
+</p>
+
+<button onclick="lanjutOrder()" style="
+background:#00aeff;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+margin-right:10px;
+">
+Saya Mengerti
+</button>
+
+<button onclick="tutupPopup()" style="
+background:#555;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+">
+Batal
+</button>
+
+</div>
+
+</div>
 
 <script>
 
@@ -315,6 +360,29 @@ cards[i].style.display = "none";
 
 }
 
+}
+
+let tujuan = "";
+
+function konfirmasi(url){
+  tujuan = url;
+
+  const popup = document.getElementById("popup");
+  popup.style.display = "flex";
+
+  popup.onclick = function(e){
+    if(e.target === popup){
+      popup.style.display = "none";
+    }
+  }
+}
+
+function tutupPopup(){
+  document.getElementById("popup").style.display = "none";
+}
+
+function lanjutOrder(){
+  window.location.href = tujuan;
 }
 
 </script>

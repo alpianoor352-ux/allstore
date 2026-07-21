@@ -380,19 +380,7 @@ const item = hasil[index];
 
 let hargaJual = item.price;
 
-if (hargaJual < 2000) {
-  hargaJual += 1000;
-} else if (hargaJual < 5000) {
-  hargaJual += 2000;
-} else if (hargaJual < 10000) {
-  hargaJual += 3000;
-} else if (hargaJual < 20000) {
-  hargaJual += 5000;
-} else if (hargaJual < 50000) {
-  hargaJual += 7000;
-} else {
-  hargaJual += 10000;
-}
+let hargaJual = Math.ceil(item.price * 1.15);
 
 document.getElementById("min").innerHTML=item.min.toLocaleString("id-ID");
 
@@ -427,19 +415,7 @@ const item = hasil[index];
 
 let hargaJual = item.price;
 
-if (hargaJual < 2000) {
-  hargaJual += 1000;
-} else if (hargaJual < 5000) {
-  hargaJual += 2000;
-} else if (hargaJual < 10000) {
-  hargaJual += 3000;
-} else if (hargaJual < 20000) {
-  hargaJual += 5000;
-} else if (hargaJual < 50000) {
-  hargaJual += 7000;
-} else {
-  hargaJual += 10000;
-}
+let hargaJual = Math.ceil(item.price * 1.15);
 
 if(jumlah < item.min && jumlah != 0){
 alert("Minimal pembelian "+item.min.toLocaleString("id-ID"));
@@ -509,19 +485,7 @@ const item = hasil[layanan.value];
 
 let hargaJual = item.price;
 
-if (hargaJual < 2000) {
-  hargaJual += 1000;
-} else if (hargaJual < 5000) {
-  hargaJual += 2000;
-} else if (hargaJual < 10000) {
-  hargaJual += 3000;
-} else if (hargaJual < 20000) {
-  hargaJual += 5000;
-} else if (hargaJual < 50000) {
-  hargaJual += 7000;
-} else {
-  hargaJual += 10000;
-}
+let hargaJual = Math.ceil(item.price * 1.15);
 
 const total = Math.ceil((jumlah / 1000) * hargaJual);
 
