@@ -378,8 +378,6 @@ if(kategori=="" || index=="") return;
 const hasil = data.filter(item => item.category_name === kategori);
 const item = hasil[index];
 
-let hargaJual = item.price;
-
 let hargaJual = Math.ceil(item.price * 1.15);
 
 document.getElementById("min").innerHTML=item.min.toLocaleString("id-ID");
@@ -412,8 +410,6 @@ return;
 
 const hasil = data.filter(item => item.category_name === kategori);
 const item = hasil[index];
-
-let hargaJual = item.price;
 
 let hargaJual = Math.ceil(item.price * 1.15);
 
@@ -482,8 +478,6 @@ return;
 
 const hasil = data.filter(item => item.category_name === kategori.value);
 const item = hasil[layanan.value];
-
-let hargaJual = item.price;
 
 let hargaJual = Math.ceil(item.price * 1.15);
 
