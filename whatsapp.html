@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TikTok - ALL STORE</title>
+<title>WhatsApp - ALL STORE</title>
 
 <style>
 
@@ -194,7 +194,7 @@ opacity:1;
 
 <div class="banner">
 
-<img src="https://i.ibb.co.com/7x22bdCW/1782866838944.jpg" alt="TikTok Banner">
+<img src="https://i.ibb.co.com/RTJ5f9SY/1782866799126.jpg" alt="WhatsApp Banner">
 
 </div>
 
@@ -203,11 +203,11 @@ opacity:1;
 <div class="card">
 
 <h1 style="text-align:center;color:#00aeff;">
-TikTok
+WhatsApp
 </h1>
 
 <p style="text-align:center;color:#bbb;margin-top:10px;">
-Pilih kategori layanan TikTok yang ingin kamu pesan.
+Pilih kategori layanan WhatsApp yang ingin kamu pesan.
 </p>
 
 <hr style="margin:30px 0;border:1px solid #333;">
@@ -268,7 +268,7 @@ Rp0
 
 <input type="url"
 id="link"
-placeholder="https://tiktok.com/....">
+placeholder="https://whatsapp.com/....">
 
 <h2 style="color:#00aeff;margin-top:20px;margin-bottom:10px;">
 📋 Ringkasan Pesanan
@@ -332,7 +332,7 @@ async function loadServices() {
     const result = await res.json();
 
     data = result.data.filter(item =>
-      item.category_name.toLowerCase().includes("tiktok")
+      item.category_name.toLowerCase().includes("whatsapp")
     );
 
     const kategori = document.getElementById("kategori");
