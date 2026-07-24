@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOKOS - ALL STORE</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+color:white;
+}
+
+.navbar{
+background:#111;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #00aeff;
+box-shadow:0 0 15px rgba(0,174,255,.35);
+}
+
+.logo{
+font-size:25px;
+font-weight:bold;
+color:#00aeff;
+}
+
+.back{
+text-decoration:none;
+background:#00aeff;
+color:white;
+padding:10px 18px;
+border-radius:10px;
+font-weight:bold;
+}
+
+.container{
+max-width:900px;
+margin:25px auto;
+padding:15px;
+}
+
+.card{
+background:#181818;
+border:2px solid #00aeff;
+border-radius:15px;
+padding:20px;
+box-shadow:0 0 20px rgba(0,174,255,.25);
+}
+
+h1{
+text-align:center;
+color:#00aeff;
+margin-bottom:10px;
+}
+
+p{
+text-align:center;
+color:#bbb;
+margin-bottom:20px;
+}
+
+select{
+width:100%;
+padding:13px;
+background:#222;
+color:white;
+border:2px solid #333;
+border-radius:10px;
+font-size:16px;
+margin-bottom:15px;
+}
+
+.card-info{
+margin-top:15px;
+padding:15px;
+background:#111;
+border:2px solid #00aeff;
+border-radius:12px;
+line-height:2;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#00aeff;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+margin-top:20px;
+}
+
+button:hover{
+box-shadow:0 0 15px rgba(0,174,255,.6);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">📱 ALL STORE</div>
+<a href="index.html" class="back">⬅ Kembali</a>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h1>NOMOR VIRTUAL</h1>
+
+<p>Pilih negara dan aplikasi yang ingin digunakan.</p>
+
+<h3>🌍 Negara</h3>
+
+<select id="country" onchange="updateInfo()">
+<option value="">Pilih Negara</option>
+</select>
+
+<h3>📲 Aplikasi</h3>
+
+<select id="service" onchange="updateInfo()">
+<option value="">Pilih Layanan</option>
+</select>
+
+<div class="card-info">
+
+<p>💰 Harga : <span id="harga">Rp0</span></p>
+
+<p>📦 Stok : <span id="stok">-</span></p>
+
+<p>📱 Nomor : <span id="nomor">Belum ada</span></p>
+
+<p>🔑 OTP : <span id="otp">Menunggu...</span></p>
+
+</div>
+
+<button onclick="beliNokos()">
+Beli Sekarang
+</button>
+
+</div>
+
+</div>
+
+<script>
+  
+  alert("Script jalan");
+
+let countries = [];
+let services = [];
+
+async function loadCountries(){
+
+try{
+
+const res = await fetch("https://allstore-tan.vercel.app/api/nokos-country");
+
+const result = await res.json();
+
+console.log(result);
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+async function loadServices(){
+
+const res = await fetch("https://allstore-tan.vercel.app/api/nokos");
+
+const result = await res.json();
+
+services = Object.values(result.services);
+
+const select = document.getElementById("service");
+
+services.forEach(item=>{
+
+select.innerHTML += `
+<option value="${item.code}">
+${item.name}
+</option>
+`;
+
+});
+
+}
+
+loadCountries();
+loadServices();
+
+async function updateInfo(){
+
+const service=document.getElementById("service").value;
+const country=document.getElementById("country").value;
+
+if(service==""||country=="") return;
+
+try{
+
+const hargaRes=await fetch(
+`/api/nokos-price?service=${service}&country=${country}`
+);
+
+const hargaData=await hargaRes.json();
+
+const info=hargaData.data[country][service];
+
+let harga=Math.ceil(info.cost*1.20);
+
+document.getElementById("harga").innerHTML=
+"Rp"+harga.toLocaleString("id-ID");
+
+const stokRes=await fetch(
+`/api/nokos-availability?service=${service}&country=${country}`
+);
+
+const stokData=await stokRes.json();
+
+document.getElementById("stok").innerHTML=
+stokData.data.available.toLocaleString("id-ID");
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+async function beliNokos(){
+
+const service=document.getElementById("service").value;
+const country=document.getElementById("country").value;
+
+if(service==""||country==""){
+
+alert("Pilih negara dan layanan terlebih dahulu");
+
+return;
+
+}
+
+alert("Tahap berikutnya: Midtrans");
+
+}
+
+</script>
+
+</body>
+</html>
