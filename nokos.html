@@ -209,23 +209,21 @@ const res = await fetch("https://allstore-tan.vercel.app/api/nokos");
 
 alert(res.status);
 
-}catch(err){
-
-alert(err);
-
-}
-
-alert("Fetch berhasil");
-
 const result = await res.json();
 
-alert("JSON berhasil");
+alert(Object.keys(result.services).length);
 
 services = Object.values(result.services);
 
 alert(services.length);
 
 cariService();
+
+}catch(err){
+
+alert(err);
+
+}
 
 }
 
