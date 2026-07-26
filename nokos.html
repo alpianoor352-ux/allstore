@@ -187,6 +187,13 @@ const hargaRes = await fetch(
 
 const hargaData = await hargaRes.json();
 
+alert(
+`Service=${service}
+Country=${country}
+
+${JSON.stringify(hargaData)}`
+);
+
 const info = hargaData.prices[country][service];
 
 document.getElementById("harga").innerHTML =
