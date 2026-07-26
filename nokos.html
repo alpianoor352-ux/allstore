@@ -177,7 +177,7 @@ async function updateInfo() {
 const service = document.getElementById("service").value;
 const country = document.getElementById("country").value;
 
-if(service=="" || country=="") return;
+if (service == "" || country == "") return;
 
 try {
 
@@ -187,12 +187,31 @@ const res = await fetch(
 
 const hargaData = await res.json();
 
-alert(JSON.stringify(hargaData));
-alert(JSON.stringify(hargaData.data));
+const info = hargaData.prices[country][service];
+
+let hargaJual = info.cost;
+
+if (hargaJual < 500) {
+    hargaJual += 100;
+} else if (hargaJual < 1000) {
+    hargaJual += 200;
+} else if (hargaJual < 2000) {
+    hargaJual += 300;
+} else if (hargaJual < 5000) {
+    hargaJual += 500;
+} else {
+    hargaJual += 1000;
+}
+
+document.getElementById("harga").innerHTML =
+"Rp " + hargaJual.toLocaleString("id-ID");
+
+document.getElementById("stok").innerHTML =
+info.count.toLocaleString("id-ID");
 
 } catch(err) {
 
-alert(err.toString());
+alert(err.message);
 
 }
 
