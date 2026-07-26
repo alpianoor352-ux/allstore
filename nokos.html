@@ -201,6 +201,8 @@ alert(JSON.stringify(info));
 document.getElementById("harga").innerHTML =
 "Rp " + Math.ceil(info.cost + hargaData.markup);
 
+alert(document.getElementById("harga").innerHTML);
+
 document.getElementById("stok").innerHTML =
 info.count;
 
