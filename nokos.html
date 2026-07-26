@@ -174,31 +174,30 @@ Beli Sekarang
 
 async function updateInfo(){
 
-alert("updateInfo jalan");
-
 const service = document.getElementById("service").value;
 const country = document.getElementById("country").value;
 
 if(service=="" || country=="") return;
 
-try {
-
-alert("Sebelum fetch");
+try{
 
 const hargaRes = await fetch(
 `https://allstore-tan.vercel.app/api/nokos-price?service=${service}&country=${country}`
 );
 
-alert("Sesudah fetch");
-
 const hargaData = await hargaRes.json();
 
-alert(JSON.stringify(hargaData));
+const info = hargaData.prices[country][service];
 
-} catch(err){
+document.getElementById("harga").innerHTML =
+"Rp " + Math.ceil(info.cost + hargaData.markup);
 
-alert("ERROR:");
-alert(err.toString());
+document.getElementById("stok").innerHTML =
+info.count;
+
+}catch(err){
+
+alert(err);
 
 }
 
