@@ -187,12 +187,9 @@ const res = await fetch(
 
 const hargaData = await res.json();
 
-if (!hargaData.success) {
-alert("Gagal mengambil data");
-return;
-}
+alert(JSON.stringify(hargaData));
 
-const info = hargaData.data[country][service];
+return;
 
 if (!info) {
 alert("Layanan tidak tersedia");
