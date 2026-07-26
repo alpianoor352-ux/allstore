@@ -1,31 +1,39 @@
-async function beliNokos(){
+export default async function handler(req, res) {
 
-try{
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+      message: "Method tidak diizinkan"
+    });
+  }
 
-const res = await fetch(
-"https://allstore-tan.vercel.app/api/nokos-buy",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-service:"wa",
-country:"6"
-})
-}
-);
+  try {
 
-alert("Status : " + res.status);
+    const { service, country } = req.body;
 
-const result = await res.json();
+    const response = await fetch(
+      "https://nokos.co.id/api/?action=getNumber",
+      {
+        method: "POST",
+        headers: {
+          "X-API-Key": process.env.NOKOS_API_KEY,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `service=${service}&country=${country}&server=s2`
+      }
+    );
 
-alert(JSON.stringify(result));
+    const result = await response.json();
 
-}catch(err){
+    return res.status(200).json(result);
 
-alert(err);
+  } catch (err) {
 
-}
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
 
-}
+  }
+
+          }
