@@ -187,28 +187,17 @@ const hargaRes = await fetch(
 
 const hargaData = await hargaRes.json();
 
-alert(
-`Service=${service}
-Country=${country}
-
-${JSON.stringify(hargaData)}`
-);
-
 const info = hargaData.prices[country][service];
 
-alert(JSON.stringify(info));
-
 document.getElementById("harga").innerHTML =
-"Rp " + Math.ceil(info.cost + hargaData.markup);
-
-alert(document.getElementById("harga").innerHTML);
+"Rp " + hargaManual[service].toLocaleString("id-ID");
 
 document.getElementById("stok").innerHTML =
 info.count;
 
 }catch(err){
 
-alert(err);
+alert("Gagal mengambil data.");
 
 }
 
