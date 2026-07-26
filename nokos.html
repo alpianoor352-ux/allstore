@@ -177,52 +177,10 @@ async function updateInfo() {
 const service = document.getElementById("service").value;
 const country = document.getElementById("country").value;
 
-if (service == "" || country == "") return;
+if(service=="" || country=="") return;
 
-try {
-
-const res = await fetch(
-`https://allstore-tan.vercel.app/api/nokos-price?service=${service}&country=${country}`
-);
-
-const hargaData = await res.json();
-
-alert(JSON.stringify(hargaData));
-
-return;
-
-if (!info) {
-alert("Layanan tidak tersedia");
-return;
-}
-
-// Harga modal dari API
-let hargaJual = info.cost;
-
-// Markup otomatis
-if (hargaJual < 500) {
-hargaJual += 100;
-} else if (hargaJual < 1000) {
-hargaJual += 200;
-} else if (hargaJual < 2000) {
-hargaJual += 300;
-} else if (hargaJual < 5000) {
-hargaJual += 500;
-} else {
-hargaJual += 1000;
-}
-
-document.getElementById("harga").innerHTML =
-"Rp " + hargaJual.toLocaleString("id-ID");
-
-document.getElementById("stok").innerHTML =
-info.count.toLocaleString("id-ID");
-
-} catch (err) {
-
-alert("Error : " + err.message);
-
-}
+alert("country = " + country);
+alert("service = " + service);
 
 }
 
