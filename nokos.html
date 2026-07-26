@@ -196,6 +196,8 @@ ${JSON.stringify(hargaData)}`
 
 const info = hargaData.prices[country][service];
 
+alert(JSON.stringify(info));
+
 document.getElementById("harga").innerHTML =
 "Rp " + Math.ceil(info.cost + hargaData.markup);
 
