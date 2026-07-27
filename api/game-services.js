@@ -2,7 +2,6 @@ import crypto from "crypto";
 
 export default async function handler(req, res) {
   try {
-
     const apiId = process.env.SOSMED_API_ID;
     const apiKey = process.env.SOSMED_API_KEY;
 
@@ -13,12 +12,11 @@ export default async function handler(req, res) {
 
     const body = new URLSearchParams({
       key: apiKey,
-      sign: sign,
-      type: "services"
+      sign: sign
     });
 
     const response = await fetch(
-      "https://panel.sosmedmedia.com/api/game-feature",
+      "https://panel.sosmedmedia.com/api/profile",
       {
         method: "POST",
         headers: {
@@ -28,17 +26,14 @@ export default async function handler(req, res) {
       }
     );
 
-    const result = await response.text();
-return res.status(200).send(result);
+    const result = await response.json();
 
-    return res.status(200).json(result);
+    res.status(200).json(result);
 
   } catch (err) {
-
-    return res.status(500).json({
+    res.status(500).json({
       result: false,
       message: err.message
     });
-
   }
       }
