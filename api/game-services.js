@@ -28,7 +28,8 @@ export default async function handler(req, res) {
       }
     );
 
-    const result = await response.json();
+    const result = await response.text();
+return res.status(200).send(result);
 
     return res.status(200).json(result);
 
