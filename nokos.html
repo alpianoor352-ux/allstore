@@ -142,7 +142,6 @@ box-shadow:0 0 15px rgba(0,174,255,.6);
 <select id="service" onchange="updateInfo()">
   <option value="">Pilih Aplikasi</option>
   <option value="wa">🟢 WhatsApp</option>
-  <option value="bye">💼 WhatsApp Business</option>
   <option value="eh">✈️ Telegram</option>
   <option value="ig">📸 Instagram + Threads</option>
   <option value="lf">🎵 TikTok / Douyin</option>
@@ -177,7 +176,7 @@ async function updateInfo() {
 const service = document.getElementById("service").value;
 const country = document.getElementById("country").value;
 
-if (service == "" || country == "") return;
+if (!service || !country) return;
 
 try {
 
@@ -187,31 +186,52 @@ const res = await fetch(
 
 const hargaData = await res.json();
 
+if (!hargaData.success) {
+alert("Gagal mengambil data");
+return;
+}
+
+if (
+!hargaData.prices ||
+!hargaData.prices[country] ||
+!hargaData.prices[country][service]
+){
+document.getElementById("harga").innerHTML = "-";
+document.getElementById("stok").innerHTML = "-";
+alert("Layanan tidak tersedia");
+return;
+}
+
 const info = hargaData.prices[country][service];
 
-let hargaJual = info.cost;
+// DEBUG
+alert("Cost = " + info.cost);
+alert("Stok = " + info.count);
+
+// Harga jual
+let hargaJual = Number(info.cost);
 
 if (hargaJual < 500) {
-    hargaJual += 100;
+hargaJual += 100;
 } else if (hargaJual < 1000) {
-    hargaJual += 200;
+hargaJual += 200;
 } else if (hargaJual < 2000) {
-    hargaJual += 300;
+hargaJual += 300;
 } else if (hargaJual < 5000) {
-    hargaJual += 500;
+hargaJual += 500;
 } else {
-    hargaJual += 1000;
+hargaJual += 1000;
 }
 
 document.getElementById("harga").innerHTML =
 "Rp " + hargaJual.toLocaleString("id-ID");
 
 document.getElementById("stok").innerHTML =
-info.count.toLocaleString("id-ID");
+Number(info.count).toLocaleString("id-ID");
 
 } catch(err) {
 
-alert(err.message);
+alert("Error : " + err.message);
 
 }
 
