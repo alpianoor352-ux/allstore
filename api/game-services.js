@@ -26,12 +26,12 @@ export default async function handler(req, res) {
       }
     );
 
-    const result = await response.json();
+    const text = await response.text();
 
-    res.status(200).json(result);
+    return res.status(200).send(text);
 
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       result: false,
       message: err.message
     });
