@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - ALL STORE</title>
@@ -142,14 +145,29 @@ Daftar
 
 <script>
 
-document.getElementById("loginForm").addEventListener("submit",(e)=>{
+const supabase = window.supabase.createClient(
+"https://sxfmmmfebcepvlwzelbi.supabase.co",
+"ANON_KEY_KAMU"
+);
+
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
 
 e.preventDefault();
 
 const email=document.getElementById("email").value;
 const password=document.getElementById("password").value;
 
-alert("Login berhasil (sementara)");
+const { error } = await supabase.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+alert(error.message);
+return;
+}
+
+window.location.href="dashboard.html";
 
 });
 

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - ALL STORE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+color:white;
+padding:20px;
+}
+
+.card{
+background:#171717;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,174,255,.25);
+max-width:500px;
+margin:auto;
+}
+
+h1{
+color:#00aeff;
+margin-bottom:15px;
+}
+
+.info{
+margin:10px 0;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#00aeff;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0095dd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Dashboard</h1>
+
+<div class="info">
+Username :
+<b id="username">Loading...</b>
+</div>
+
+<div class="info">
+Email :
+<b id="email">Loading...</b>
+</div>
+
+<div class="info">
+Saldo Koin :
+<b id="coins">0</b>
+</div>
+
+<div class="info">
+Role :
+<b id="role">user</b>
+</div>
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+<script>
+
+const supabase = window.supabase.createClient(
+"https://sxfmmmfebcepvlwzelbi.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4Zm1tbWZlYmNlcHZsd3plbGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDkzOTYsImV4cCI6MjEwMDc4NTM5Nn0.0uxfmCKIVXkhG1Nw4wlKmfPy2hb_w4CbLxo0tDClAWM"
+);
+
+async function loadUser(){
+
+const { data:{ session } } = await supabase.auth.getSession();
+
+if(!session){
+window.location.href="login.html";
+return;
+}
+
+const user=session.user;
+
+const { data,error }=await supabase
+.from("users")
+.select("*")
+.eq("id",user.id)
+.single();
+
+if(error){
+alert(error.message);
+return;
+}
+
+document.getElementById("username").innerText=data.username;
+document.getElementById("email").innerText=data.email;
+document.getElementById("coins").innerText=data.coins;
+document.getElementById("role").innerText=data.role;
+
+}
+
+async function logout(){
+
+await supabase.auth.signOut();
+
+window.location.href="login.html";
+
+}
+
+loadUser();
+
+</script>
+
+</body>
+</html>
