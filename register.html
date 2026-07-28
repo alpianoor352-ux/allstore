@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar - ALL STORE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.box{
+width:380px;
+background:#171717;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 20px rgba(0,174,255,.25);
+}
+
+.logo{
+font-size:32px;
+font-weight:bold;
+text-align:center;
+color:#00aeff;
+margin-bottom:5px;
+}
+
+.sub{
+text-align:center;
+color:#888;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:13px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+background:#252525;
+color:white;
+font-size:15px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:13px;
+border:none;
+border-radius:8px;
+background:#00aeff;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#0097e6;
+}
+
+.info{
+margin-top:15px;
+text-align:center;
+color:#999;
+}
+
+.info a{
+color:#00aeff;
+text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="logo">
+ALL STORE
+</div>
+
+<div class="sub">
+Buat akun baru
+</div>
+
+<form id="registerForm">
+
+<input
+id="username"
+type="text"
+placeholder="Username"
+required>
+
+<input
+id="email"
+type="email"
+placeholder="Email"
+required>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+required>
+
+<input
+id="confirm"
+type="password"
+placeholder="Konfirmasi Password"
+required>
+
+<button type="submit">
+DAFTAR
+</button>
+
+</form>
+
+<div class="info">
+Sudah punya akun?
+<a href="login.html">
+Login
+</a>
+</div>
+
+</div>
+
+<script>
+const supabase = window.supabase.createClient(
+  "https://sxfmmmfebcepvlwzelbi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4Zm1tbWZlYmNlcHZsd3plbGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDkzOTYsImV4cCI6MjEwMDc4NTM5Nn0.0uxfmCKIVXkhG1Nw4wlKmfPy2hb_w4CbLxo0tDClAWM"
+);
+
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+
+e.preventDefault();
+
+const username = document.getElementById("username").value.trim();
+const email = document.getElementById("email").value.trim();
+const password = document.getElementById("password").value;
+const confirm = document.getElementById("confirm").value;
+
+if(password !== confirm){
+alert("Password tidak sama!");
+return;
+}
+
+const { data, error } = await supabase.auth.signUp({
+email,
+password
+});
+
+if(error){
+alert(error.message);
+return;
+}
+
+const user = data.user;
+
+if(user){
+
+const { error: dbError } = await supabase
+.from("users")
+.insert({
+id: user.id,
+email: email,
+username: username,
+coins: 0,
+role: "user"
+});
+
+if(dbError){
+alert("Akun berhasil dibuat, tetapi gagal menyimpan data user:\n" + dbError.message);
+return;
+}
+
+}
+
+alert("Registrasi berhasil!");
+window.location.href = "login.html";
+
+});
+</script>
+
+</body>
+</html>
