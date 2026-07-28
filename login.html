@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - ALL STORE</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+width:350px;
+background:#171717;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,174,255,.3);
+}
+
+.logo{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#00aeff;
+margin-bottom:5px;
+}
+
+.sub{
+text-align:center;
+color:#999;
+margin-bottom:20px;
+font-size:14px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+background:#252525;
+color:#fff;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#00aeff;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#0095dd;
+}
+
+.link{
+margin-top:15px;
+text-align:center;
+color:#aaa;
+}
+
+.link a{
+color:#00aeff;
+text-decoration:none;
+}
+
+.forgot{
+text-align:right;
+margin-bottom:15px;
+}
+
+.forgot a{
+color:#00aeff;
+font-size:14px;
+text-decoration:none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="box">
+
+<div class="logo">ALL STORE</div>
+
+<div class="sub">
+Masuk ke akun Anda
+</div>
+
+<form id="loginForm">
+
+<input
+type="email"
+id="email"
+placeholder="Email"
+required>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+required>
+
+<div class="forgot">
+<a href="#">
+Lupa Password?
+</a>
+</div>
+
+<button type="submit">
+Masuk
+</button>
+
+</form>
+
+<div class="link">
+Belum punya akun?
+<a href="register.html">
+Daftar
+</a>
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("loginForm").addEventListener("submit",(e)=>{
+
+e.preventDefault();
+
+const email=document.getElementById("email").value;
+const password=document.getElementById("password").value;
+
+alert("Login berhasil (sementara)");
+
+});
+
+</script>
+
+</body>
+</html>
