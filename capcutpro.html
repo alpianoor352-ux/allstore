@@ -370,10 +370,11 @@ Rp250.000
 📝 Data Akun
 </h2>
 
-<label>Catatan (Optional)<input type="text" id="Catatan (Optional)" placeholder="Catatan (Optional)">
-
-<label>📱 Nomor WhatsApp</label>
-<input type="number" id="wa" placeholder="08xxxxxxxxxx">
+<label>📧 Gmail Akun</label>
+<input
+type="email"
+id="gmail"
+placeholder="Masukkan Gmail akun CapCut">
 
 <label>💳 Metode Pembayaran</label>
 
@@ -480,22 +481,13 @@ document.querySelector(".peringatan").style.display="none";
 
 document.getElementById("pesanBtn").addEventListener("click",function(){
 
-let nama=document.getElementById("nama").value.trim();
-
-let wa=document.getElementById("wa").value.trim();
+let gmail=document.getElementById("gmail").value.trim();
 
 let payment=document.getElementById("payment").value;
 
-if(nama==""){
+if(gmail==""){
 
-alert("Masukkan nama pembeli!");
-return;
-
-}
-
-if(wa==""){
-
-alert("Masukkan nomor WhatsApp!");
+alert("Masukkan Gmail akun!");
 return;
 
 }
@@ -509,17 +501,15 @@ return;
 
 let pesan=`Halo Admin ALL STORE
 
-Saya ingin membeli akun premium.
+Saya ingin membeli akun pro.
 
-📱 Aplikasi : CapCut Premium
+📱 Aplikasi : CapCut Pro
 
 📦 Paket : ${paketDipilih}
 
 💰 Harga : Rp${hargaDipilih.toLocaleString("id-ID")}
 
-👤 Nama : ${nama}
-
-📱 WhatsApp : ${wa}
+📧 Gmail Akun : ${gmail}
 
 💳 Pembayaran : ${payment}
 

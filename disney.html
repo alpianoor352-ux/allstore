@@ -298,14 +298,27 @@ Pilih paket yang kamu inginkan.
 <div class="paket-grid">
 
 <div class="paket"
-onclick="pilihPaket(this,'Paket kosong',0)">
+onclick="pilihPaket(this,'User Host 12 Bulan',268000)">
 
 <div class="nama-paket">
-Paket kosong
+User Host 12 Bulan
 </div>
 
 <div class="harga">
-Rp0
+Rp268.000
+</div>
+
+</div>
+
+<div class="paket"
+onclick="pilihPaket(this,'User Reguler 12 Bualan',298000)">
+
+<div class="nama-paket">
+User Reguler 12 Bulan
+</div>
+
+<div class="harga">
+Rp298.000
 </div>
 
 </div>
@@ -318,10 +331,11 @@ Rp0
 📝 Data Akun
 </h2>
 
-<label>Catatan (Optional)<input type="text" id="Catatan (Optional)" placeholder="Catatan (Optional)">
-
-<label>📱 Nomor WhatsApp</label>
-<input type="number" id="wa" placeholder="08xxxxxxxxxx">
+<label>📧 Gmail Akun</label>
+<input
+type="email"
+id="gmail"
+placeholder="Masukkan Gmail akun Disney">
 
 <label>💳 Metode Pembayaran</label>
 
@@ -365,13 +379,19 @@ Rp0
 
 <br><br>
 
-🚧 Layanan Belum Tersedia
+• Harga dapat berubah sewaktu-waktu mengikuti supplier.
 
-Maaf, layanan top up untuk aplikasi ini sedang dalam proses penambahan.
+<br>
 
-Silakan cek kembali nanti.
+• Stok akun terbatas.
 
-🔥 ALL STORE
+<br>
+
+• Silakan konfirmasi stok sebelum pembayaran.
+
+<br>
+
+• Akun dikirim setelah pembayaran berhasil.
 
 </div>
 
@@ -422,22 +442,13 @@ document.querySelector(".peringatan").style.display="none";
 
 document.getElementById("pesanBtn").addEventListener("click",function(){
 
-let nama=document.getElementById("nama").value.trim();
-
-let wa=document.getElementById("wa").value.trim();
+let gmail=document.getElementById("gmail").value.trim();
 
 let payment=document.getElementById("payment").value;
 
-if(nama==""){
+if(gmail==""){
 
-alert("Masukkan nama pembeli!");
-return;
-
-}
-
-if(wa==""){
-
-alert("Masukkan nomor WhatsApp!");
+alert("Masukkan Gmail akun!");
 return;
 
 }
@@ -451,17 +462,15 @@ return;
 
 let pesan=`Halo Admin ALL STORE
 
-Saya ingin membeli akun premium.
+Saya ingin membeli akun pro.
 
-📱 Aplikasi : Disney+
+📱 Aplikasi : Disney + Hotstar 
 
 📦 Paket : ${paketDipilih}
 
 💰 Harga : Rp${hargaDipilih.toLocaleString("id-ID")}
 
-👤 Nama : ${nama}
-
-📱 WhatsApp : ${wa}
+📧 Gmail Akun : ${gmail}
 
 💳 Pembayaran : ${payment}
 
