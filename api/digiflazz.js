@@ -1,13 +1,8 @@
-
-import crypto from "crypto";
-
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     return res.status(200).end();
   }
 
@@ -19,35 +14,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const {
-      buyer_sku_code,
-      customer_no,
-      testing = true
-    } = req.body || {};
+    const { buyer_sku_code, customer_no } = req.body;
 
     if (!buyer_sku_code || !customer_no) {
       return res.status(400).json({
         success: false,
-        message: "buyer_sku_code dan customer_no wajib diisi"
+        message: "Kode produk dan nomor tujuan wajib diisi"
       });
     }
-
-    const username = process.env.DIGIFLAZZ_USERNAME;
-    const apiKey = process.env.DIGIFLAZZ_API_KEY;
-
-    if (!username || !apiKey) {
-      return res.status(500).json({
-        success: false,
-        message: "Konfigurasi Digiflazz belum lengkap"
-      });
-    }
-
-    const ref_id = "TEST-" + Date.now();
-
-    const sign = crypto
-      .createHash("md5")
-      .update(username + apiKey + ref_id)
-      .digest("hex");
 
     const response = await fetch(
       "https://api.digiflazz.com/v1/transaction",
@@ -57,24 +31,27 @@ export default async function handler(req, res) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          username,
+          username: process.env.DIGIFLAZZ_USERNAME,
           buyer_sku_code,
           customer_no,
-          ref_id,
-          sign,
-          testing
+          ref_id: "TEST-" + Date.now(),
+          sign: process.env.DIGIFLAZZ_API_KEY
         })
       }
     );
 
     const data = await response.json();
 
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
     return res.status(200).json(data);
 
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: err.message
     });
   }
 }
