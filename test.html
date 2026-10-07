@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Test Digiflazz - ALL STORE</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 2px solid #00aeff;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #00aeff55;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00aeff;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background: #1a1a1a;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: 0;
+      border-radius: 8px;
+      background: #00aeff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+    }
+
+    pre {
+      margin-top: 20px;
+      padding: 15px;
+      background: #050505;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+    }
+
+    .status {
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+
+    <h1>TEST DIGIFLAZZ</h1>
+
+    <label>SKU Produk</label>
+    <input
+      id="sku"
+      type="text"
+      value="xld10"
+    >
+
+    <label>Nomor Tujuan</label>
+    <input
+      id="nomor"
+      type="text"
+      value="087800001232"
+    >
+
+    <button id="btn" onclick="testDigiflazz()">
+      TEST TRANSAKSI
+    </button>
+
+    <div class="status" id="status">
+      Belum dites
+    </div>
+
+    <pre id="hasil">Hasil API akan muncul di sini...</pre>
+
+  </div>
+
+
+  <script>
+
+    async function testDigiflazz() {
+
+      const tombol = document.getElementById("btn");
+      const status = document.getElementById("status");
+      const hasil = document.getElementById("hasil");
+
+      const sku = document.getElementById("sku").value.trim();
+      const nomor = document.getElementById("nomor").value.trim();
+
+      if (!sku || !nomor) {
+        alert("SKU dan nomor tujuan wajib diisi!");
+        return;
+      }
+
+      tombol.disabled = true;
+      tombol.textContent = "MENGIRIM...";
+      status.textContent = "Menghubungi server...";
+      hasil.textContent = "Sedang mengirim request...";
+
+      try {
+
+        const response = await fetch("/api/order", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+
+            provider: "digiflazz",
+
+            buyer_sku_code: sku,
+
+            customer_no: nomor,
+
+            testing: true
+
+          })
+
+        });
+
+        const text = await response.text();
+
+        status.textContent =
+          "HTTP Status: " + response.status;
+
+        try {
+
+          const json = JSON.parse(text);
+
+          hasil.textContent =
+            JSON.stringify(json, null, 2);
+
+        } catch {
+
+          hasil.textContent = text;
+
+        }
+
+      } catch (error) {
+
+        status.textContent = "REQUEST ERROR";
+
+        hasil.textContent =
+          error.message;
+
+      }
+
+      tombol.disabled = false;
+      tombol.textContent = "TEST TRANSAKSI";
+
+    }
+
+  </script>
+
+</body>
+</html>
