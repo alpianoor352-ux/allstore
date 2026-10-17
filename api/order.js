@@ -1,8 +1,5 @@
-import crypto from "crypto";
 
 export default async function handler(req, res) {
-
-  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -19,34 +16,27 @@ export default async function handler(req, res) {
   }
 
   try {
-
     const {
       type,
       service,
       target,
       quantity,
       additional,
-
-      // Digiflazz
       buyer_sku_code,
       customer_no,
       ref_id
     } = req.body || {};
 
-    // =====================================
-    // 1. ORDER SMM
-    // =====================================
-
+    // ORDER SMM — tetap menggunakan provider lama
     if (type === "smm") {
-
       const body = new URLSearchParams({
-        api_id: process.env.API_ID,
-        api_key: process.env.API_KEY,
-        secret_key: process.env.SECRET_KEY,
-        service: service || "",
-        target: target || "",
-        quantity: quantity || "",
-        additional: additional || ""
+        api_id: process.env.API_ID || "",
+        api_key: process.env.API_KEY || "",
+        secret_key: process.env.SECRET_KEY || "",
+        service: String(service || ""),
+        target: String(target || ""),
+        quantity: String(quantity || ""),
+        additional: String(additional || "")
       });
 
       const response = await fetch(
@@ -60,84 +50,69 @@ export default async function handler(req, res) {
         }
       );
 
-      const text = await response.text();
-
-      return res.status(200).send(text);
+      return res.status(200).send(await response.text());
     }
 
-
-    // =====================================
-    // 2. ORDER DIGIFLAZZ
-    // =====================================
-
+    // ORDER DIGIFLAZZ — diteruskan ke VPS
     if (type === "digiflazz") {
-
-      if (!buyer_sku_code || !customer_no) {
+      if (
+        typeof buyer_sku_code !== "string" ||
+        !buyer_sku_code.trim() ||
+        typeof customer_no !== "string" ||
+        !customer_no.trim()
+      ) {
         return res.status(400).json({
           response: false,
           msg: "Kode produk dan nomor tujuan wajib diisi"
         });
       }
 
+      const vpsUrl = process.env.DIGIFLAZZ_VPS_URL;
+      const sharedSecret = process.env.VPS_SHARED_SECRET;
+
+      if (!vpsUrl || !sharedSecret) {
+        return res.status(500).json({
+          response: false,
+          msg: "Konfigurasi API VPS belum lengkap"
+        });
+      }
+
       const idTransaksi =
-        ref_id ||
-        "ALLSTORE-" +
-        Date.now();
-
-      const username =
-        process.env.DIGIFLAZZ_USERNAME;
-
-      const apiKey =
-        process.env.DIGIFLAZZ_API_KEY;
-
-      // Signature Digiflazz:
-      // md5(username + apiKey + ref_id)
-
-      const sign = crypto
-        .createHash("md5")
-        .update(username + apiKey + idTransaksi)
-        .digest("hex");
-
-      const body = {
-        username: username,
-        buyer_sku_code: buyer_sku_code,
-        customer_no: customer_no,
-        ref_id: idTransaksi,
-        sign: sign
-      };
+        typeof ref_id === "string" && ref_id.trim()
+          ? ref_id.trim()
+          : "ALLSTORE-" + Date.now();
 
       const response = await fetch(
-        "https://api.digiflazz.com/v1/transaction",
+        vpsUrl.replace(/\/+$/, "") + "/digiflazz/transaction",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + sharedSecret
           },
-          body: JSON.stringify(body)
+          body: JSON.stringify({
+            buyer_sku_code: buyer_sku_code.trim(),
+            customer_no: customer_no.trim(),
+            ref_id: idTransaksi
+          })
         }
       );
 
       const data = await response.json();
 
-      return res.status(200).json(data);
+      return res.status(response.ok ? 200 : 502).json(data);
     }
-
-
-    // =====================================
-    // TYPE TIDAK DIKENAL
-    // =====================================
 
     return res.status(400).json({
       response: false,
       msg: "Type order tidak dikenali"
     });
-
   } catch (err) {
+    console.error("Order gagal:", err.message);
 
     return res.status(500).json({
       response: false,
-      msg: err.message
+      msg: "Terjadi kesalahan saat memproses pesanan"
     });
-
   }
 }
