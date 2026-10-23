@@ -328,7 +328,7 @@ let data = [];
 
 async function loadServices() {
   try {
-    const res = await fetch("https://allstore-tan.vercel.app/api/services");
+    const res = await fetch("https://api.allstoreid.my.id/smm/services");
     const result = await res.json();
 
     data = result.data.filter(item =>
