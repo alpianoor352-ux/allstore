@@ -328,7 +328,7 @@ let data = [];
 
 async function loadServices() {
   try {
-    const res = await fetch("https://allstore-tan.vercel.app/api/services");
+    const res = await fetch("https://api.allstoreid.my.id/smm/services");
     const result = await res.json();
 
     data = result.data.filter(item =>
@@ -485,23 +485,29 @@ const total = Math.ceil((jumlah / 1000) * hargaJual);
 
 try {
 
-const response = await fetch("https://allstore-tan.vercel.app/api/payment", {
+const response = await fetch("https://api.allstoreid.my.id/payment", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
   },
-  body: JSON.stringify({
-  order_id: "ALL-" + Date.now(),
-  gross_amount: total,
-  service: item.id,
-  target: link,
+body: JSON.stringify({
+  service: String(item.id),
+  target: link.trim(),
   quantity: Number(jumlah)
 })
-});
-
+  });
+  
 const result = await response.json();
 
-if (result.token) {
+if (!response.ok) {
+  bukaPopup(
+    "❌ Gagal",
+    result.error || "Gagal membuat pembayaran. Coba lagi."
+  );
+  return;
+  }
+  
+  if (result.token) {
 
 snap.pay(result.token, {
   onSuccess: function(result) {
