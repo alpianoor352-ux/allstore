@@ -193,6 +193,24 @@ object-fit:contain;
 border-radius:10px;
 }
 
+
+/* Katalog nominal berbentuk kartu */
+#produk { display:none; }
+.katalog-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;margin-bottom:10px}
+.katalog-label label{margin:0}
+#statusProduk{color:#aaa;font-size:12px;text-align:right}
+.grid-produk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 18px}
+.kartu-produk{appearance:none;width:100%;min-width:0;margin:0;padding:14px 10px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-align:left;color:#fff;background:#171522;border:2px solid #342a49;border-radius:14px;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+.kartu-produk:hover{background:#211b31;border-color:#8a65ff}
+.kartu-produk:active{transform:scale(.98)}
+.kartu-produk.terpilih{border-color:#00aeff;background:#102334;box-shadow:0 0 0 1px #00aeff33,0 5px 16px #00aeff18}
+.kartu-produk .nama-produk{font-size:15px;line-height:1.35;font-weight:700;overflow-wrap:anywhere}
+.kartu-produk .harga-produk{color:#00d9ff;font-size:17px;font-weight:800;line-height:1.25}
+.kartu-produk .pilih-hint{display:block;color:#aaa2bb;font-size:11px;margin-top:5px}
+.kartu-produk.terpilih .pilih-hint{color:#8be6ff}
+.kosong-produk{grid-column:1/-1;padding:18px 12px;border:1px dashed #514566;border-radius:12px;color:#c8c1d7;text-align:center;font-size:14px}
+@media(max-width:360px){.grid-produk{gap:8px}.kartu-produk{padding:12px 8px}.kartu-produk .nama-produk{font-size:13px}.kartu-produk .harga-produk{font-size:15px}}
+
 </style>
 
 </head>
@@ -220,8 +238,14 @@ border-radius:10px;
 <label>🌍 Server (Opsional)</label>
 <input type="text" id="server" placeholder="Masukkan Server">
   
-<label>💎 Pilih Produk</label>
-<select id="produk">
+<div class="katalog-label">
+  <label>💎 Pilih Nominal Top Up</label>
+  <span id="statusProduk">Memuat produk...</span>
+</div>
+<div id="gridProduk" class="grid-produk" aria-label="Pilihan nominal Mobile Legends">
+  <div class="kosong-produk">Memuat pilihan nominal...</div>
+</div>
+<select id="produk" aria-hidden="true" tabindex="-1">
 <option value="">-- Pilih Produk --</option>
 </select>
 
@@ -272,6 +296,8 @@ border-radius:10px;
 
 const URL_API_GAME = "https://api.allstoreid.my.id/digiflazz/game-products";
 const produk = document.getElementById("produk");
+const gridProduk = document.getElementById("gridProduk");
+const statusProduk = document.getElementById("statusProduk");
 let daftarProduk = [];
 let produkBySku = new Map();
 
@@ -286,58 +312,92 @@ function formatRupiah(angka) {
   return Number(angka).toLocaleString("id-ID");
 }
 
+function pilihKartuProduk(sku) {
+  const item = produkBySku.get(sku);
+  if (!item) return;
+  produk.value = sku;
+  gridProduk.querySelectorAll(".kartu-produk").forEach(kartu => {
+    const aktif = kartu.dataset.sku === sku;
+    kartu.classList.toggle("terpilih", aktif);
+    kartu.setAttribute("aria-pressed", aktif ? "true" : "false");
+    const hint = kartu.querySelector(".pilih-hint");
+    if (hint) hint.textContent = aktif ? "✓ Dipilih" : "Ketuk untuk memilih";
+  });
+  document.getElementById("hargaTotal").textContent = "💰 Total Harga: Rp" + formatRupiah(item.harga);
+  document.getElementById("ringProduk").textContent = "💎 Produk : " + item.nama;
+  document.getElementById("ringHarga").textContent = "💰 Harga : Rp" + formatRupiah(item.harga);
+}
+
 async function muatProduk() {
   produk.innerHTML = '<option value="">Memuat produk Mobile Legends...</option>';
-
+  gridProduk.innerHTML = '<div class="kosong-produk">Memuat pilihan nominal...</div>';
+  statusProduk.textContent = "Memuat produk...";
   try {
     const response = await fetch(URL_API_GAME);
     if (!response.ok) throw new Error("Server API merespons " + response.status);
-
     const hasil = await response.json();
-    if (!hasil.success || !Array.isArray(hasil.data)) {
-      throw new Error("Format data produk tidak sesuai");
-    }
+    if (!hasil.success || !Array.isArray(hasil.data)) throw new Error("Format data produk tidak sesuai");
 
     daftarProduk = hasil.data
       .filter(item => String(item.brand || "").toUpperCase().includes("MOBILE LEGENDS"))
+      .filter(item => !/cek username|check username/i.test(String(item.product_name || "")))
       .map(item => ({
         nama: item.product_name,
         sku: item.buyer_sku_code,
         hargaModal: Number(item.price),
         harga: hitungHargaJual(Number(item.price))
       }))
-      .filter(item => item.nama && item.sku && Number.isFinite(item.hargaModal));
+      .filter(item => item.nama && item.sku && Number.isFinite(item.hargaModal) && item.hargaModal > 0);
 
     produkBySku = new Map(daftarProduk.map(item => [item.sku, item]));
     produk.innerHTML = '<option value="">-- Pilih Produk --</option>';
-
+    gridProduk.innerHTML = "";
     if (daftarProduk.length === 0) {
       produk.innerHTML = '<option value="">Produk Mobile Legends belum tersedia</option>';
+      gridProduk.innerHTML = '<div class="kosong-produk">Produk Mobile Legends belum tersedia. Coba lagi nanti.</div>';
+      statusProduk.textContent = "0 produk";
       return;
     }
 
+    statusProduk.textContent = daftarProduk.length + " produk tersedia";
     daftarProduk.forEach(item => {
       const option = document.createElement("option");
       option.value = item.sku;
       option.textContent = `${item.nama} - Rp${formatRupiah(item.harga)}`;
       produk.appendChild(option);
+
+      const kartu = document.createElement("button");
+      kartu.type = "button";
+      kartu.className = "kartu-produk";
+      kartu.dataset.sku = item.sku;
+      kartu.setAttribute("aria-pressed", "false");
+
+      const nama = document.createElement("span");
+      nama.className = "nama-produk";
+      nama.textContent = item.nama;
+      const detail = document.createElement("span");
+      const harga = document.createElement("span");
+      harga.className = "harga-produk";
+      harga.textContent = "Rp" + formatRupiah(item.harga);
+      const hint = document.createElement("span");
+      hint.className = "pilih-hint";
+      hint.textContent = "Ketuk untuk memilih";
+      detail.append(harga, hint);
+      kartu.append(nama, detail);
+      kartu.addEventListener("click", () => pilihKartuProduk(item.sku));
+      gridProduk.appendChild(kartu);
     });
   } catch (error) {
     console.error("Gagal memuat produk game:", error);
     produk.innerHTML = '<option value="">Produk gagal dimuat — muat ulang halaman</option>';
+    gridProduk.innerHTML = '<div class="kosong-produk">Produk gagal dimuat. Periksa koneksi lalu muat ulang halaman.</div>';
+    statusProduk.textContent = "Gagal dimuat";
     alert("Produk Mobile Legends gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.");
   }
 }
 
 produk.addEventListener("change", function() {
-  const item = produkBySku.get(this.value);
-  const nama = item ? item.nama : "-";
-  const harga = item ? item.harga : 0;
-
-  document.getElementById("hargaTotal").textContent =
-    "💰 Total Harga: Rp" + formatRupiah(harga);
-  document.getElementById("ringProduk").textContent = "💎 Produk : " + nama;
-  document.getElementById("ringHarga").textContent = "💰 Harga : Rp" + formatRupiah(harga);
+  if (this.value) pilihKartuProduk(this.value);
 });
 
 muatProduk();
