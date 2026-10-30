@@ -1,295 +1,75 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NOKOS - ALL STORE</title>
-
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#0d0d0d;
-color:white;
-}
-
-.navbar{
-background:#111;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:2px solid #00aeff;
-box-shadow:0 0 15px rgba(0,174,255,.35);
-}
-
-.logo{
-font-size:25px;
-font-weight:bold;
-color:#00aeff;
-}
-
-.back{
-text-decoration:none;
-background:#00aeff;
-color:white;
-padding:10px 18px;
-border-radius:10px;
-font-weight:bold;
-}
-
-.container{
-max-width:900px;
-margin:25px auto;
-padding:15px;
-}
-
-.card{
-background:#181818;
-border:2px solid #00aeff;
-border-radius:15px;
-padding:20px;
-box-shadow:0 0 20px rgba(0,174,255,.25);
-}
-
-h1{
-text-align:center;
-color:#00aeff;
-margin-bottom:10px;
-}
-
-p{
-text-align:center;
-color:#bbb;
-margin-bottom:20px;
-}
-
-select{
-width:100%;
-padding:13px;
-background:#222;
-color:white;
-border:2px solid #333;
-border-radius:10px;
-font-size:16px;
-margin-bottom:15px;
-}
-
-.card-info{
-margin-top:15px;
-padding:15px;
-background:#111;
-border:2px solid #00aeff;
-border-radius:12px;
-line-height:2;
-}
-
-button{
-width:100%;
-padding:15px;
-background:#00aeff;
-color:white;
-border:none;
-border-radius:10px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-margin-top:20px;
-}
-
-button:hover{
-box-shadow:0 0 15px rgba(0,174,255,.6);
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="navbar">
-<div class="logo">📱 ALL STORE</div>
-<a href="index.html" class="back">⬅ Kembali</a>
-</div>
-
-<div class="container">
-
-<div class="card">
-
-<h1>NOMOR VIRTUAL</h1>
-
-<p>Pilih negara dan aplikasi yang ingin digunakan.</p>
-
-<h3>🌍 Negara</h3>
-
-<select id="country" onchange="updateInfo()">
-  <option value="">Pilih Negara</option>
-  <option value="6">🇮🇩 Indonesia</option>
-  <option value="7">🇲🇾 Malaysia</option>
-  <option value="196">🇸🇬 Singapura</option>
-  <option value="187">🇺🇸 Amerika Serikat</option>
-  <option value="182">🇯🇵 Jepang</option>
-</select>
-
-<h3>📲 Aplikasi</h3>
-
-<select id="service" onchange="updateInfo()">
-  <option value="">Pilih Aplikasi</option>
-  <option value="wa">🟢 WhatsApp</option>
-  <option value="eh">✈️ Telegram</option>
-  <option value="ig">📸 Instagram + Threads</option>
-  <option value="lf">🎵 TikTok / Douyin</option>
-  <option value="go">📧 Google / YouTube / Gmail</option>
-  <option value="ds">💬 Discord</option>
-</select>
-
-<div class="card-info">
-
-<p>💰 Harga : <span id="harga">Rp0</span></p>
-
-<p>📦 Stok : <span id="stok">-</span></p>
-
-<p>📱 Nomor : <span id="nomor">Belum ada</span></p>
-
-<p>🔑 OTP : <span id="otp">Menunggu...</span></p>
-
-</div>
-
-<button onclick="beliNokos()">
-Beli Sekarang
-</button>
-
-</div>
-
-</div>
-
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#0d0d0d;color:#fff}.navbar{background:#111;padding:15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #00aeff;box-shadow:0 0 15px #00aeff55}
+.logo{font-size:22px;font-weight:bold;color:#00aeff}.back{background:#00aeff;color:white;text-decoration:none;padding:10px 14px;border-radius:9px;font-weight:bold}
+.container{max-width:760px;margin:25px auto;padding:15px}.card{background:#181818;border:1px solid #00aeff;border-radius:16px;padding:20px;box-shadow:0 0 20px #00aeff22}
+h1{text-align:center;color:#00aeff;margin-bottom:8px}.subtitle{text-align:center;color:#aaa;margin-bottom:22px;line-height:1.5}
+label{display:block;margin:15px 0 8px;font-weight:bold}select{width:100%;padding:13px;background:#222;color:#fff;border:1px solid #444;border-radius:10px;font-size:16px}
+.info{margin-top:18px;padding:16px;background:#101010;border:1px solid #00aeff;border-radius:12px}.item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #292929}.item:last-child{border:0}
+.value{font-weight:bold;text-align:right;color:#00aeff;overflow-wrap:anywhere}.status{margin-top:14px;color:#aaa;font-size:13px;line-height:1.5}
+.notice{margin-top:16px;padding:12px;background:#24200f;border:1px solid #a88724;border-radius:10px;color:#f1d77a;font-size:13px;line-height:1.5}
+button{width:100%;padding:14px;margin-top:18px;background:#333;color:#aaa;border:0;border-radius:10px;font-size:16px;font-weight:bold}
+@media(max-width:480px){.container{margin:12px auto}.card{padding:16px}.logo{font-size:19px}}
+</style></head><body>
+<div class="navbar"><div class="logo">ALL STORE</div><a href="index.html" class="back">Kembali</a></div>
+<main class="container"><section class="card">
+<h1>NOMOR VIRTUAL</h1><p class="subtitle">Pilih negara dan layanan untuk melihat estimasi harga serta ketersediaan.</p>
+<label for="country">Negara</label><select id="country"><option value="">Memuat negara...</option></select>
+<label for="service">Layanan / aplikasi</label><select id="service" disabled><option value="">Memuat layanan...</option></select>
+<div class="info" aria-live="polite">
+<div class="item"><span>Estimasi harga</span><span class="value" id="harga">-</span></div>
+<div class="item"><span>Stok tersedia</span><span class="value" id="stok">-</span></div>
+<div class="item"><span>Server</span><span class="value">Server Plus (s2)</span></div></div>
+<p class="status" id="status">Menghubungkan ke layanan...</p>
+<div class="notice">Informasi harga dan stok dapat berubah sewaktu-waktu. Fitur pemesanan belum diaktifkan.</div>
+<button type="button" disabled>Pemesanan belum tersedia</button>
+</section></main>
 <script>
-
-async function updateInfo() {
-
-const service = document.getElementById("service").value;
-const country = document.getElementById("country").value;
-
-if (!service || !country) return;
-
-try {
-
-const res = await fetch(
-`https://allstore-tan.vercel.app/api/nokos-price?service=${service}&country=${country}`
-);
-
-const hargaData = await res.json();
-
-if (!hargaData.success) {
-alert("Gagal mengambil data");
-return;
+// Pastikan domain ini sama dengan domain API VPS yang dipakai website ALL STORE.
+const API_BASE = "https://api.allstoreid.my.id/nokos";
+const SERVER = "s2";
+const MARKUP_RUPIAH = 1000;
+const countryEl=document.getElementById("country"), serviceEl=document.getElementById("service");
+const priceEl=document.getElementById("harga"), stockEl=document.getElementById("stok"), statusEl=document.getElementById("status");
+const serviceNames={wa:"WhatsApp",tg:"Telegram",ig:"Instagram",lf:"TikTok",go:"Google / Gmail",ds:"Discord"};
+let availability={};
+const showStatus=m=>statusEl.textContent=m;
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n);
+async function getJson(path){const r=await fetch(API_BASE+path,{headers:{Accept:"application/json"}});if(!r.ok)throw Error("HTTP "+r.status);return r.json();}
+function fillSelect(el,entries,label){el.innerHTML="";const first=document.createElement("option");first.value="";first.textContent=label;el.appendChild(first);for(const [v,t] of entries){const o=document.createElement("option");o.value=String(v);o.textContent=t;el.appendChild(o);}}
+function resetInfo(){priceEl.textContent="-";stockEl.textContent="-";}
+async function loadInitialData(){
+ try{
+  showStatus("Mengambil daftar negara dan layanan...");
+  const [cd,sd,ad]=await Promise.all([getJson("/countries"),getJson("/services"),getJson("/availability?country=6&server="+SERVER)]);
+  const countries=cd.countries||{};
+  fillSelect(countryEl,Object.entries(countries).map(([id,n])=>[id,typeof n==="string"?n:(n.name||n.country||"Negara "+id)]),"Pilih negara");
+  const services=sd.services||{};
+  fillSelect(serviceEl,Object.entries(services).map(([code,d])=>[code,serviceNames[code]||(typeof d==="string"?d:(d.name||d.title||code.toUpperCase()))]),"Pilih layanan");
+  serviceEl.disabled=Object.keys(services).length===0;availability=ad.availability||{};
+  showStatus("Data berhasil dimuat. Pilih negara dan layanan untuk melihat harga.");
+ }catch(e){showStatus("Gagal memuat data: "+e.message+". Periksa domain API dan pengaturan CORS VPS.");countryEl.innerHTML='<option value="">Data negara gagal dimuat</option>';serviceEl.innerHTML='<option value="">Data layanan gagal dimuat</option>';}
 }
-
-if (
-!hargaData.prices ||
-!hargaData.prices[country] ||
-!hargaData.prices[country][service]
-){
-document.getElementById("harga").innerHTML = "-";
-document.getElementById("stok").innerHTML = "-";
-alert("Layanan tidak tersedia");
-return;
+async function updateInfo(){
+ resetInfo();const country=countryEl.value,service=serviceEl.value;
+ if(!country||!service){showStatus("Pilih negara dan layanan terlebih dahulu.");return;}
+ try{
+  showStatus("Mengambil harga...");
+  const d=await getJson("/prices?service="+encodeURIComponent(service)+"&country="+encodeURIComponent(country)+"&server="+SERVER);
+  if(!d.success)throw Error(d.message||"Data harga tidak tersedia");
+  const info=d.prices&&d.prices[country]&&d.prices[country][service];
+  if(!info){showStatus("Harga untuk kombinasi ini belum tersedia.");return;}
+  const rate=Number(d.usd_idr_rate||0),cost=Number(info.cost);
+  if(!Number.isFinite(cost)||!rate)throw Error("Data konversi harga tidak lengkap.");
+  priceEl.textContent=rupiah(cost*rate+MARKUP_RUPIAH);
+  stockEl.textContent=Number(info.count||0).toLocaleString("id-ID");
+  if(country==="6"&&availability[service]!==undefined)stockEl.textContent=Number(availability[service]).toLocaleString("id-ID");
+  showStatus("Estimasi harga: biaya API USD dikonversi ke rupiah + margin Rp"+MARKUP_RUPIAH.toLocaleString("id-ID")+".");
+ }catch(e){showStatus("Gagal mengambil harga: "+e.message);}
 }
-
-const info = hargaData.prices[country][service];
-
-// DEBUG
-alert("Cost = " + info.cost);
-alert("Stok = " + info.count);
-
-// Harga jual
-let hargaJual = Number(info.cost);
-
-if (hargaJual < 500) {
-hargaJual += 100;
-} else if (hargaJual < 1000) {
-hargaJual += 200;
-} else if (hargaJual < 2000) {
-hargaJual += 300;
-} else if (hargaJual < 5000) {
-hargaJual += 500;
-} else {
-hargaJual += 1000;
-}
-
-document.getElementById("harga").innerHTML =
-"Rp " + hargaJual.toLocaleString("id-ID");
-
-document.getElementById("stok").innerHTML =
-Number(info.count).toLocaleString("id-ID");
-
-} catch(err) {
-
-alert("Error : " + err.message);
-
-}
-
-}
-
-async function beliNokos(){
-
-const service = document.getElementById("service").value;
-const country = document.getElementById("country").value;
-
-if(service=="" || country==""){
-
-alert("Pilih negara dan layanan terlebih dahulu");
-
-return;
-
-}
-
-try{
-
-const res = await fetch(
-"https://allstore-tan.vercel.app/api/nokos-buy",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-service,
-country
-})
-}
-);
-
-const result = await res.json();
-
-if(!result.success){
-
-alert(result.message || "Gagal membeli nomor");
-
-return;
-
-}
-
-document.getElementById("nomor").innerHTML =
-result.data.phone;
-
-alert("Nomor berhasil didapat!");
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-</script>
-
-</body>
-</html>
+countryEl.addEventListener("change",updateInfo);serviceEl.addEventListener("change",updateInfo);loadInitialData();
+</script></body></html>
