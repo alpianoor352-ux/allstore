@@ -143,9 +143,9 @@
     });
 
     sessionStorage.setItem('allstore_token', result.token);
-    sessionStorage.setItem('allstore_user', JSON.stringify(result.user));
+sessionStorage.setItem('allstore_user', JSON.stringify(result.user));
 
-    showMessage('Login berhasil! Selamat datang di ALL STORE.', 'info');
+window.location.href = 'index.html';
 
   } catch (error) {
     showMessage(error.message, 'error');
