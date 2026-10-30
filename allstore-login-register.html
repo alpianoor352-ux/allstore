@@ -69,7 +69,22 @@
         <button class="submit" type="submit">Buat Akun</button>
       </form>
 
-      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <form id="verifyForm" class="hidden">
+  <h2>Verifikasi Email</h2>
+  <p class="desc">Masukkan kode 6 digit yang dikirim ke email kamu.</p>
+
+  <label for="verifyEmail">Email</label>
+  <input id="verifyEmail" type="email" readonly required>
+
+  <label for="verifyCode">Kode OTP</label>
+  <input id="verifyCode" type="text"
+    inputmode="numeric" maxlength="6"
+    pattern="[0-9]{6}" placeholder="Masukkan kode OTP" required>
+
+  <button class="submit" type="submit">Verifikasi Email</button>
+      </form>
+
+<div id="message" class="message" role="status" aria-live="polite"></div>
       <p class="notice">Dengan melanjutkan, pastikan data akun yang kamu masukkan benar dan jangan bagikan kata sandi kepada siapa pun.</p>
     </section>
     <a class="back" href="index.html">← Kembali ke halaman utama</a>
@@ -78,12 +93,15 @@
   <script>
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const verifyForm = document.getElementById('verifyForm');
     const message = document.getElementById('message');
+    const API_BASE = 'https://api.allstoreid.my.id';
 
     function showForm(type){
       const isLogin = type === 'login';
       loginForm.classList.toggle('hidden', !isLogin);
       registerForm.classList.toggle('hidden', isLogin);
+      verifyForm.classList.add('hidden');
       document.getElementById('loginTab').classList.toggle('active', isLogin);
       document.getElementById('registerTab').classList.toggle('active', !isLogin);
       message.className = 'message';
@@ -95,21 +113,104 @@
       message.textContent = text;
     }
 
-    loginForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      showMessage('Tampilan login sudah siap, tetapi autentikasi belum tersambung ke backend. Jangan gunakan data akun asli dulu.', 'info');
+    async function apiRequest(path, data) {
+  const response = await fetch(API_BASE + path, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || 'Terjadi kesalahan.');
+  }
+
+  return result;
+    }
+
+    loginForm.addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  try {
+    showMessage('Sedang masuk...', 'info');
+
+    const result = await apiRequest('/auth/login', {
+      email: document.getElementById('loginEmail').value.trim(),
+      password: document.getElementById('loginPassword').value
     });
 
-    registerForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      const password = document.getElementById('registerPassword').value;
-      const confirm = document.getElementById('confirmPassword').value;
-      if(password !== confirm){
-        showMessage('Konfirmasi kata sandi tidak sama.', 'error');
-        return;
-      }
-      showMessage('Tampilan pendaftaran sudah siap, tetapi penyimpanan akun belum tersambung ke backend.', 'info');
+    sessionStorage.setItem('allstore_token', result.token);
+    sessionStorage.setItem('allstore_user', JSON.stringify(result.user));
+
+    showMessage('Login berhasil! Selamat datang di ALL STORE.', 'info');
+
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+});
+
+    registerForm.addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const password = document.getElementById('registerPassword').value;
+  const confirm = document.getElementById('confirmPassword').value;
+
+  if (password !== confirm) {
+    showMessage('Konfirmasi kata sandi tidak sama.', 'error');
+    return;
+  }
+
+  try {
+    showMessage('Sedang membuat akun...', 'info');
+
+    const email = document.getElementById('registerEmail').value.trim();
+
+    const result = await apiRequest('/auth/register', {
+      name: document.getElementById('fullName').value.trim(),
+      email: email,
+      password: password
     });
+
+    document.getElementById('verifyEmail').value = email;
+    loginForm.classList.add('hidden');
+    registerForm.classList.add('hidden');
+    verifyForm.classList.remove('hidden');
+
+    showMessage(result.message, 'info');
+
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+});
+
+    verifyForm.addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  try {
+    showMessage('Sedang memverifikasi email...', 'info');
+
+    const email = document.getElementById('verifyEmail').value.trim();
+    const code = document.getElementById('verifyCode').value.trim();
+
+    const result = await apiRequest('/auth/verify', {
+      email: email,
+      code: code
+    });
+
+    verifyForm.classList.add('hidden');
+    showForm('login');
+    document.getElementById('loginEmail').value = email;
+
+    showMessage(result.message || 'Email berhasil diverifikasi. Silakan login.', 'info');
+
+  } catch (error) {
+    showMessage(error.message, 'error');
+  }
+});
+    
   </script>
 </body>
 </html>
