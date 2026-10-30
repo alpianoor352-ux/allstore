@@ -419,11 +419,15 @@ margin-top:10px;
 
 <h1>ALL STORE</h1>
 
-<div class="navmenu">
-<a href="index.html">Home</a>
-<a href="topupgame.html">Game</a>
-<a href="apkpremium.html">Premium</a>
-</div>
+  <div class="navmenu">
+  <a href="index.html">Home</a>
+  <a href="topupgame.html">Game</a>
+  <a href="apkpremium.html">Premium</a>
+
+  <a href="allstore-login-register.html" id="accountLink">
+    Login / Daftar
+  </a>
+  </div>
 
 <button id="themeBtn" class="theme-btn" onclick="toggleTheme()">🌙</button>
 
@@ -662,6 +666,17 @@ card.style.display = "none";
 });
 
 }
+
+  const accountLink = document.getElementById("accountLink");
+const token = sessionStorage.getItem("allstore_token");
+
+if (token) {
+    accountLink.textContent = "Profil Saya";
+    accountLink.href = "account.html";
+} else {
+    accountLink.textContent = "Login / Daftar";
+    accountLink.href = "allstore-login-register.html";
+  }
 
 </script>
 
