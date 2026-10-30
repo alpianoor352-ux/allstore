@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>Profil Saya - ALL STORE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0d0d0d;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 18px;
+      background: #111;
+      border-bottom: 1px solid #00aeff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      color: #00aeff;
+      font-size: 21px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .welcome {
+      margin: 12px 0 22px;
+    }
+
+    .welcome h1 {
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .card {
+      background: #161616;
+      border: 1px solid #087db2;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 17px;
+      box-shadow: 0 0 18px #00aeff12;
+    }
+
+    .balance-label {
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .balance {
+      color: #00aeff;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 12px 0 18px;
+    }
+
+    .status {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .profile-info {
+      margin-top: 17px;
+    }
+
+    .profile-info p {
+      color: #aaa;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .profile-info strong {
+      display: block;
+      font-size: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .menu a {
+      background: #161616;
+      border: 1px solid #087db2;
+      border-radius: 13px;
+      padding: 18px 12px;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .menu a:active {
+      background: #073047;
+    }
+
+    .logout {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e04444;
+      background: #281313;
+      color: #ff7777;
+      border-radius: 11px;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      padding: 25px 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h2>ALL STORE</h2>
+    <a href="index.html">Kembali ke toko</a>
+  </header>
+
+  <main class="container">
+
+    <section class="welcome">
+      <h1>Profil Saya</h1>
+      <p>Kelola akun dan saldo ALL STORE kamu.</p>
+    </section>
+
+    <section class="card">
+      <p class="balance-label">Saldo tersedia</p>
+      <div class="balance">Belum tersedia</div>
+      <p class="status">
+        Saldo akan ditampilkan setelah terhubung ke API VPS.
+      </p>
+    </section>
+
+    <section class="card">
+      <h3>Informasi Akun</h3>
+
+      <div class="profile-info">
+        <p>Nama lengkap</p>
+        <strong id="userName">Memuat...</strong>
+      </div>
+
+      <div class="profile-info">
+        <p>Email</p>
+        <strong id="userEmail">Memuat...</strong>
+      </div>
+    </section>
+
+    <section class="menu">
+      <a href="wallet.html">Top Up Saldo</a>
+      <a href="history.html">Riwayat Transaksi</a>
+      <a href="history.html">Riwayat Pesanan</a>
+      <a href="profile.html">Pengaturan Profil</a>
+    </section>
+
+    <button class="logout" onclick="logout()">
+      Keluar dari Akun
+    </button>
+
+  </main>
+
+  <footer>
+    © 2026 ALL STORE - Digital Marketplace
+  </footer>
+
+  <script>
+    const token = sessionStorage.getItem('allstore_token');
+    const savedUser = sessionStorage.getItem('allstore_user');
+
+    if (!token || !savedUser) {
+      window.location.replace('allstore-login-register.html');
+    } else {
+      try {
+        const user = JSON.parse(savedUser);
+
+        document.getElementById('userName').textContent =
+          user.name || user.fullName || 'Nama belum tersedia';
+
+        document.getElementById('userEmail').textContent =
+          user.email || 'Email belum tersedia';
+
+      } catch (error) {
+        sessionStorage.removeItem('allstore_token');
+        sessionStorage.removeItem('allstore_user');
+        window.location.replace('allstore-login-register.html');
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('allstore_token');
+      sessionStorage.removeItem('allstore_user');
+      window.location.replace('index.html');
+    }
+  </script>
+
+</body>
+</html>
