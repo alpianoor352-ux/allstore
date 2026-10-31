@@ -21,6 +21,30 @@ button:disabled{opacity:.5}
 .muted{color:#aaa;font-size:13px;line-height:1.6}
 .history{border:1px solid #333;border-radius:9px;padding:13px;margin-top:10px;overflow-wrap:anywhere}
 a{color:#00aeff}
+
+  .qris-box{
+  display:none;
+  margin-top:15px;
+  padding:15px;
+  background:#fff;
+  border-radius:12px;
+  text-align:center;
+}
+
+.qris-box img{
+  width:100%;
+  max-width:300px;
+  height:auto;
+  display:block;
+  margin:10px auto;
+}
+
+.qris-box p{
+  color:#222;
+  font-size:13px;
+  line-height:1.5;
+}
+  
 </style>
 </head>
 
@@ -48,6 +72,15 @@ a{color:#00aeff}
 </select>
 
 <div id="paymentInfo" class="muted"></div>
+
+<div id="qrisBox" class="qris-box">
+  <p><strong>QRIS ALL STORE ID</strong></p>
+  <img
+    src="https://i.ibb.co.com/HTMFSfT9/qr-ID1025411348788-31-10-26-1793411896-1793411911232.jpg"
+    alt="QRIS pembayaran ALL STORE"
+  >
+  <p>Scan QRIS menggunakan aplikasi pembayaran. Pastikan nama merchant yang muncul adalah ALL STORE ID, Gudang sebelum membayar.</p>
+</div>
 
 <button type="submit" id="submitButton">Buat Permintaan Top Up</button>
 <div class="message" id="message"></div>
@@ -81,7 +114,12 @@ const paymentDetails={
 };
 
 document.getElementById("method").addEventListener("change",function(){
-  document.getElementById("paymentInfo").textContent=paymentDetails[this.value]||"";
+  const method=this.value;
+  const paymentInfo=document.getElementById("paymentInfo");
+  const qrisBox=document.getElementById("qrisBox");
+
+  paymentInfo.textContent=paymentDetails[method]||"";
+  qrisBox.style.display=method==="QRIS"?"block":"none";
 });
 
 async function apiRequest(path,options={}){
