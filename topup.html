@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top Up Saldo - ALL STORE</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#0d0d0d;color:white;font-family:Arial,sans-serif}
+.container{max-width:600px;margin:25px auto}
+h1{color:#00aeff;text-align:center}
+.subtitle{text-align:center;color:#aaa;margin-bottom:25px}
+.panel{background:#161616;border:1px solid #00aeff;border-radius:14px;padding:20px;margin-bottom:18px}
+label{display:block;margin:14px 0 7px}
+input,select{width:100%;padding:13px;background:#0d0d0d;border:1px solid #444;border-radius:8px;color:white;font-size:15px}
+button{width:100%;padding:13px;margin-top:16px;border:0;border-radius:8px;background:#00aeff;color:#001522;font-weight:bold;font-size:15px}
+button:disabled{opacity:.5}
+.message{margin-top:14px;color:#00aeff;overflow-wrap:anywhere}
+.muted{color:#aaa;font-size:13px;line-height:1.6}
+.history{border:1px solid #333;border-radius:9px;padding:13px;margin-top:10px;overflow-wrap:anywhere}
+a{color:#00aeff}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>TOP UP SALDO</h1>
+<p class="subtitle">ALL STORE - Digital Marketplace</p>
+
+<div class="panel">
+<h3>Isi Saldo</h3>
+<p class="muted">Pilih metode pembayaran dan nominal top up.</p>
+
+<form id="topupForm">
+<label>Nominal Top Up</label>
+<input type="number" id="amount" min="10000" max="1000000" step="1" placeholder="Contoh: 50000" required>
+
+<label>Metode Pembayaran</label>
+<select id="method" required>
+<option value="">Pilih pembayaran</option>
+<option value="QRIS">QRIS DANA Bisnis</option>
+<option value="DANA">DANA</option>
+<option value="GoPay">GoPay</option>
+<option value="OVO">OVO</option>
+<option value="ShopeePay">ShopeePay</option>
+</select>
+
+<div id="paymentInfo" class="muted"></div>
+
+<button type="submit" id="submitButton">Buat Permintaan Top Up</button>
+<div class="message" id="message"></div>
+</form>
+</div>
+
+<div class="panel">
+<h3>Riwayat Top Up</h3>
+<button type="button" onclick="loadHistory()">Muat Ulang Riwayat</button>
+<div id="history">Memuat riwayat...</div>
+</div>
+
+<p class="muted"><a href="account.html">Kembali ke Akun Saya</a></p>
+</div>
+
+<script>
+const API="https://api.allstoreid.my.id";
+const token=sessionStorage.getItem("allstore_token");
+const userRaw=sessionStorage.getItem("allstore_user");
+
+if(!token || !userRaw){
+  location.href="allstore-login-register.html";
+}
+
+const paymentDetails={
+  QRIS:"Pembayaran menggunakan QRIS DANA Bisnis. QRIS akan ditampilkan setelah pengajuan dibuat.",
+  DANA:"Transfer ke DANA: 081545462473 a.n. MUHAMMAD ALFIANOR.",
+  GoPay:"Transfer ke GoPay: 081545462473 a.n. Alpi Anoor.",
+  OVO:"Transfer ke OVO: 081545462473 a.n. Muhammad Alfianor.",
+  ShopeePay:"Transfer ke ShopeePay: +62 831-7149-9805 a.n. alpi___."
+};
+
+document.getElementById("method").addEventListener("change",function(){
+  document.getElementById("paymentInfo").textContent=paymentDetails[this.value]||"";
+});
+
+async function apiRequest(path,options={}){
+  const response=await fetch(API+path,{
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+token,
+      ...(options.headers||{})
+    }
+  });
+
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.message||"Permintaan gagal.");
+  return data;
+}
+
+document.getElementById("topupForm").addEventListener("submit",async function(e){
+  e.preventDefault();
+
+  const amount=Number(document.getElementById("amount").value);
+  const method=document.getElementById("method").value;
+  const message=document.getElementById("message");
+  const button=document.getElementById("submitButton");
+
+  if(!Number.isInteger(amount)||amount<10000||amount>1000000){
+    message.textContent="Nominal harus Rp10.000 sampai Rp1.000.000.";
+    return;
+  }
+
+  button.disabled=true;
+  message.textContent="Mengirim permintaan...";
+
+  try{
+    const data=await apiRequest("/wallet/topup",{
+      method:"POST",
+      body:JSON.stringify({amount,method})
+    });
+
+    message.textContent="Permintaan berhasil dibuat. ID: "+(data.id||data.request?.id||"lihat riwayat")+". Silakan ikuti instruksi pembayaran yang tersedia.";
+    document.getElementById("amount").value="";
+    await loadHistory();
+
+  }catch(error){
+    message.textContent=error.message;
+  }finally{
+    button.disabled=false;
+  }
+});
+
+function rupiah(value){
+  return "Rp"+Number(value||0).toLocaleString("id-ID");
+}
+
+async function loadHistory(){
+  const box=document.getElementById("history");
+  box.textContent="Memuat riwayat...";
+
+  try{
+    const data=await apiRequest("/wallet/topup-history");
+    const items=Array.isArray(data.requests)?data.requests:
+      Array.isArray(data.topups)?data.topups:[];
+
+    if(!items.length){
+      box.textContent="Belum ada permintaan top up.";
+      return;
+    }
+
+    box.innerHTML="";
+    items.forEach(item=>{
+      const div=document.createElement("div");
+      div.className="history";
+
+      const p=document.createElement("p");
+      p.textContent="Nominal: "+rupiah(item.amount);
+      div.appendChild(p);
+
+      const method=document.createElement("p");
+      method.textContent="Metode: "+item.method;
+      div.appendChild(method);
+
+      const status=document.createElement("p");
+      status.textContent="Status: "+item.status;
+      div.appendChild(status);
+
+      const date=document.createElement("p");
+      date.textContent="Tanggal: "+item.created_at;
+      div.appendChild(date);
+
+      box.appendChild(div);
+    });
+
+  }catch(error){
+    box.textContent=error.message;
+  }
+}
+
+loadHistory();
+</script>
+</body>
+</html>
