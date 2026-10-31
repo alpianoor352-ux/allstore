@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin ALL STORE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0d0d0d;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 35px auto;
+    }
+
+    h1 {
+      color: #00aeff;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #aaa;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .panel {
+      background: #161616;
+      border: 1px solid #00aeff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 0 12px #00aeff22;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0 14px;
+      background: #0d0d0d;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 8px;
+      background: #00aeff;
+      color: #001522;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 4px;
+    }
+
+    button.reject {
+      background: #ff4545;
+      color: white;
+    }
+
+    button.secondary {
+      background: #333;
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .request {
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 12px;
+      background: #101010;
+    }
+
+    .request p {
+      margin: 8px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      color: #ffc107;
+      font-weight: bold;
+    }
+
+    .message {
+      margin: 12px 0;
+      color: #00aeff;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>ALL STORE ADMIN</h1>
+    <p class="subtitle">Panel pengelolaan toko</p>
+
+    <section class="panel" id="loginPanel">
+      <h3>Login Admin</h3>
+
+      <form id="loginForm">
+        <label>Password Admin</label>
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="Masukkan password admin"
+          required
+        >
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="message" id="loginMessage"></div>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="panel">
+        <h3>Dashboard Admin</h3>
+        <p>Kelola permintaan top up pelanggan ALL STORE.</p>
+        <button onclick="loadTopups()">Muat Ulang</button>
+        <button class="secondary" onclick="logout()">Logout</button>
+        <div class="message" id="dashboardMessage"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Permintaan Top Up</h3>
+        <div id="topupList">Memuat data...</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API = "https://api.allstoreid.my.id";
+    const TOKEN_KEY = "allstore_admin_token";
+
+    let adminToken = sessionStorage.getItem(TOKEN_KEY);
+
+    async function apiRequest(path, options = {}) {
+      const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      };
+
+      if (adminToken) {
+        headers.Authorization = "Bearer " + adminToken;
+      }
+
+      const response = await fetch(API + path, {
+        ...options,
+        headers
+      });
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("Respons server tidak valid.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || "Terjadi kesalahan.");
+      }
+
+      return data;
+    }
+
+    function showDashboard() {
+      document.getElementById("loginPanel").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+    }
+
+    function showLogin() {
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("loginPanel").classList.remove("hidden");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const message = document.getElementById("loginMessage");
+      const password = document.getElementById("adminPassword").value;
+
+      message.textContent = "Memeriksa login...";
+
+      try {
+        const data = await apiRequest("/admin/login", {
+          method: "POST",
+          body: JSON.stringify({ password })
+        });
+
+        if (!data.token) {
+          throw new Error("Token admin tidak ditemukan pada respons.");
+        }
+
+        adminToken = data.token;
+        sessionStorage.setItem(TOKEN_KEY, adminToken);
+
+        document.getElementById("adminPassword").value = "";
+        message.textContent = "";
+
+        showDashboard();
+        await loadTopups();
+
+      } catch (error) {
+        message.textContent = error.message;
+      }
+    });
+
+    async function loadTopups() {
+      const list = document.getElementById("topupList");
+      const message = document.getElementById("dashboardMessage");
+
+      list.textContent = "Memuat permintaan top up...";
+      message.textContent = "";
+
+      try {
+        const data = await apiRequest("/admin/topups");
+
+        const requests = Array.isArray(data.topups)
+          ? data.topups
+          : Array.isArray(data.requests)
+            ? data.requests
+            : [];
+
+        if (requests.length === 0) {
+          list.textContent = "Belum ada permintaan top up.";
+          return;
+        }
+
+        list.innerHTML = "";
+
+        requests.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "request";
+
+          const fields = [
+            ["ID", item.id],
+            ["Pelanggan", item.name],
+            ["Email", item.email],
+            ["Jumlah", formatRupiah(item.amount)],
+            ["Metode", item.method],
+            ["Nama Pengirim", item.sender_name || "-"],
+            ["Referensi Pembayaran", item.payment_reference || "-"],
+            ["Status", item.status],
+            ["Tanggal", item.created_at]
+          ];
+
+          fields.forEach(([label, value]) => {
+            const p = document.createElement("p");
+            p.textContent = label + ": " + (value ?? "-");
+            card.appendChild(p);
+          });
+
+          if (item.status === "pending") {
+            const note = document.createElement("textarea");
+            note.placeholder = "Catatan admin (opsional)";
+            note.rows = 2;
+            card.appendChild(note);
+
+            const approve = document.createElement("button");
+            approve.textContent = "Setujui";
+            approve.onclick = () => reviewTopup(item.id, "approve", note.value);
+
+            const reject = document.createElement("button");
+            reject.textContent = "Tolak";
+            reject.className = "reject";
+            reject.onclick = () => reviewTopup(item.id, "reject", note.value);
+
+            card.appendChild(approve);
+            card.appendChild(reject);
+          }
+
+          list.appendChild(card);
+        });
+
+      } catch (error) {
+        list.textContent = error.message;
+
+        if (error.message.toLowerCase().includes("sesi admin")) {
+          logout();
+        }
+      }
+    }
+
+    async function reviewTopup(id, action, admin_note) {
+      const confirmation = action === "approve"
+        ? "Pastikan uang benar-benar sudah masuk. Setujui top up ini?"
+        : "Yakin ingin menolak permintaan top up ini?";
+
+      if (!confirm(confirmation)) return;
+
+      try {
+        const data = await apiRequest("/admin/topup/review", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+            action,
+            admin_note
+          })
+        });
+
+        alert(data.message || "Permintaan berhasil diproses.");
+        await loadTopups();
+
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    function formatRupiah(amount) {
+      return "Rp" + Number(amount || 0).toLocaleString("id-ID");
+    }
+
+    function logout() {
+      sessionStorage.removeItem(TOKEN_KEY);
+      adminToken = null;
+      showLogin();
+      document.getElementById("topupList").textContent = "";
+      document.getElementById("loginMessage").textContent = "Sesi admin telah berakhir.";
+    }
+
+    if (adminToken) {
+      showDashboard();
+      loadTopups();
+    } else {
+      showLogin();
+    }
+  </script>
+</body>
+</html>
