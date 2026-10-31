@@ -142,7 +142,8 @@ async function loadHistory(){
 
   try{
     const data=await apiRequest("/wallet/topup-history");
-    const items=Array.isArray(data.requests)?data.requests:
+    const items=Array.isArray(data.history)?data.history:
+      Array.isArray(data.requests)?data.requests:
       Array.isArray(data.topups)?data.topups:[];
 
     if(!items.length){
