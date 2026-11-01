@@ -162,9 +162,9 @@
 
     <section class="card">
       <p class="balance-label">Saldo tersedia</p>
-      <div class="balance">Belum tersedia</div>
-      <p class="status">
-        Saldo akan ditampilkan setelah terhubung ke API VPS.
+      <div class="balance" id="walletBalance">Memuat saldo...</div>
+      <p class="status" id="walletStatus">
+  Menghubungkan ke server...
       </p>
     </section>
 
@@ -221,6 +221,42 @@
         window.location.replace('allstore-login-register.html');
       }
     }
+
+        async function loadWalletBalance() {
+      const balanceEl = document.getElementById('walletBalance');
+      const statusEl = document.getElementById('walletStatus');
+
+      try {
+        const response = await fetch(
+          'https://api.allstoreid.my.id/wallet/balance',
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || 'Gagal mengambil saldo.');
+        }
+
+        balanceEl.textContent = new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          maximumFractionDigits: 0
+        }).format(data.balance);
+
+        statusEl.textContent = 'Saldo akun berhasil dimuat.';
+      } catch (error) {
+        balanceEl.textContent = 'Tidak tersedia';
+        statusEl.textContent = error.message || 'Gagal terhubung ke server.';
+      }
+    }
+
+    loadWalletBalance();
 
     function logout() {
       sessionStorage.removeItem('allstore_token');
