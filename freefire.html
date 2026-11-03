@@ -131,6 +131,8 @@ button:hover{
 background:#0090d4;
 }
 
+button:disabled{opacity:.6;cursor:not-allowed;}
+
 .ringkasan{
 margin-top:20px;
 padding:15px;
@@ -249,14 +251,11 @@ border-radius:10px;
 <option value="">-- Pilih Produk --</option>
 </select>
 
-<label>💳 Metode Pembayaran</label>
-<select id="payment">
-<option>DANA</option>
-<option>GoPay</option>
-<option>OVO</option>
-<option>ShopeePay</option>
-<option>QRIS</option>
-</select>
+  <label>💳 Pembayaran</label>
+<div id="walletInfo" style="padding:13px;background:#111;border:1px solid #00aeff;border-radius:10px;margin-bottom:12px;">
+  Saldo ALL STORE: <strong id="walletBalance">Memuat saldo...</strong>
+  <div style="font-size:12px;color:#aaa;margin-top:6px;">Pembelian akan memotong saldo akun ALL STORE.</div>
+</div>
 
 <div id="hargaTotal">
 💰 Total Harga: Rp0
@@ -281,10 +280,9 @@ border-radius:10px;
 <span class="close" onclick="tutupPeringatan()">&times;</span>
 
 <b>⚠️ PERHATIAN!</b><br><br>
-
-• Pastikan User ID dan Server sudah benar.<br>
-• Kesalahan pengisian data bukan tanggung jawab Admin ALL STORE.<br>
-• Pesanan yang sudah diproses tidak dapat dibatalkan atau direfund.
+  • Pastikan User ID sudah benar.<br>
+• Pastikan saldo Wallet mencukupi.<br>
+• Jika transaksi gagal dan memenuhi ketentuan refund, saldo akan dikembalikan.
 
 </div>
 
@@ -301,12 +299,10 @@ const statusProduk = document.getElementById("statusProduk");
 let daftarProduk = [];
 let produkBySku = new Map();
 
-// Harga jual: margin 15% atau minimal Rp1.000, lalu dibulatkan ke atas
-// ke kelipatan Rp500 agar harga mudah dibaca.
+// Harga jual ALL STORE: harga provider + markup 3%, dibulatkan ke atas.
 function hitungHargaJual(hargaModal) {
-  const hargaDenganMargin = Math.max(hargaModal * 1.15, hargaModal + 1000);
-  return Math.ceil(hargaDenganMargin / 500) * 500;
-}
+  return Math.ceil(Number(hargaModal) * 1.03);
+  }
 
 function formatRupiah(angka) {
   return Number(angka).toLocaleString("id-ID");
@@ -396,59 +392,184 @@ function formatRupiah(angka) {
   }
   }
 
-  produk.addEventListener("change", function() {
+        produk.addEventListener("change", function() {
   if (this.value) pilihKartuProduk(this.value);
 });
 
+let requestId = null;
+let orderTerakhir = null;
+
+function buatUUID() {
+  return crypto.randomUUID();
+}
+
+async function pesanSekarang() {
+  const token = sessionStorage.getItem("allstore_token");
+  const uid = document.getElementById("uid").value.trim();
+  const server = document.getElementById("server").value.trim();
+  const sku = produk.value;
+
+  if (!token) {
+    alert("Silakan login terlebih dahulu.");
+    location.href = "login.html";
+    return;
+  }
+
+  if (!uid || !/^\d+$/.test(uid)) {
+    alert("Masukkan User ID yang benar.");
+    return;
+  }
+
+  if (!sku) {
+    alert("Pilih nominal terlebih dahulu.");
+    return;
+  }
+
+  if (!requestId) requestId = buatUUID();
+
+  const tombol = document.getElementById("pesanBtn");
+  tombol.disabled = true;
+  tombol.textContent = "Memproses...";
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/game/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        buyer_sku_code: sku,
+        customer_no: uid + server,
+        client_request_id: requestId
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error(hasil.message || hasil.error || "Pesanan gagal.");
+    }
+
+    requestId = null;
+    orderTerakhir = hasil.order_id;
+
+    document.getElementById("hasilPesanan")?.remove();
+
+    const hasilBox = document.createElement("div");
+    hasilBox.id = "hasilPesanan";
+    hasilBox.className = "ringkasan";
+    hasilBox.innerHTML =
+      "<h3>Hasil Pesanan</h3>" +
+      "<p>ID Pesanan: " + orderTerakhir + "</p>" +
+      "<p>Status: " + (hasil.status || "processing") + "</p>" +
+      "<p>Harga: Rp" + formatRupiah(hasil.price || 0) + "</p>";
+
+    document.querySelector(".ringkasan").after(hasilBox);
+
+    if (hasil.status === "processing" || hasil.status === "unknown") {
+      const cek = document.createElement("button");
+      cek.id = "cekStatusBtn";
+      cek.textContent = "Cek Status Pesanan";
+      cek.onclick = cekStatus;
+      hasilBox.after(cek);
+    }
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    tombol.disabled = false;
+    tombol.textContent = "Pesan Sekarang";
+  }
+}
+
+async function cekStatus() {
+  const token = sessionStorage.getItem("allstore_token");
+
+  if (!token || !orderTerakhir) return;
+
+  const tombol = document.getElementById("cekStatusBtn");
+  tombol.disabled = true;
+  tombol.textContent = "Memeriksa...";
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/game/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        action: "check_status",
+        order_id: orderTerakhir
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error(hasil.message || hasil.error || "Gagal cek status.");
+    }
+
+    document.querySelector("#hasilPesanan p:nth-child(2)").textContent =
+      "Status: " + hasil.status;
+
+    alert("Status pesanan: " + hasil.status);
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    tombol.disabled = false;
+    tombol.textContent = "Cek Status Pesanan";
+  }
+}
+
+document.getElementById("pesanBtn").addEventListener("click", pesanSekarang);
+
+async function muatSaldo() {
+  const token = sessionStorage.getItem("allstore_token");
+  const elemen = document.getElementById("walletBalance");
+
+  if (!token) {
+    elemen.textContent = "Login untuk melihat saldo";
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/wallet/balance", {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Gagal memuat saldo");
+    }
+
+    const saldo = Number(
+      hasil.balance ?? hasil.wallet?.balance ?? hasil.data?.balance
+    );
+
+    if (!Number.isFinite(saldo)) {
+      throw new Error("Format saldo tidak dikenali");
+    }
+
+    elemen.textContent = "Rp" + formatRupiah(saldo);
+
+  } catch (error) {
+    elemen.textContent = "Gagal memuat saldo";
+    console.error(error);
+  }
+}
+
+function tutupPeringatan() {
+  document.getElementById("peringatan").style.display = "none";
+}
+
 muatProduk();
-
-document.getElementById("pesanBtn").addEventListener("click", function(){
-
-let uid=document.getElementById("uid").value;
-let server=document.getElementById("server").value;
-let pembayaran=document.getElementById("payment").value;
-
-if(uid==""){
-alert("Masukkan User ID!");
-return;
-}
-
-if(produk.value===""){
-alert("Pilih produk terlebih dahulu!");
-return;
-}
-
-const itemDipilih = produkBySku.get(produk.value);
-if (!itemDipilih) {
-alert("Data produk belum siap. Muat ulang halaman lalu coba lagi.");
-return;
-}
-
-let pesan=`Halo Admin ALL STORE
-
-Saya ingin Top Up Free Fire.
-
-🆔 UID : ${uid}
-🌍 Server : ${server}
-
-💎 Produk : ${itemDipilih.nama}
-🧾 Kode Produk : ${itemDipilih.sku}
-
-💰 Harga : Rp${formatRupiah(itemDipilih.harga)}
-
-💳 Pembayaran : ${pembayaran}
-
-Terima kasih.`;
-
-window.open(
-"https://wa.me/6281545462473?text="+encodeURIComponent(pesan)
-);
-
-});
-
-function tutupPeringatan(){
-document.getElementById("peringatan").style.display="none";
-}
+muatSaldo();
 
 </script>
 
