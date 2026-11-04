@@ -512,9 +512,18 @@ async function cekStatus() {
     }
 
     document.querySelector("#hasilPesanan p:nth-child(2)").textContent =
-      "Status: " + hasil.status;
+  "Status: " + hasil.status;
 
-    alert("Status pesanan: " + hasil.status);
+if (hasil.price !== undefined && hasil.price !== null) {
+  document.querySelector("#hasilPesanan p:nth-child(3)").textContent =
+    "Harga: Rp" + formatRupiah(hasil.price);
+}
+
+if (hasil.status === "success" || hasil.status === "failed") {
+  tombol.remove();
+}
+
+alert("Status pesanan: " + hasil.status);
 
   } catch (error) {
     alert(error.message);
