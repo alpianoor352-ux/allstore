@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
-
+  
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title> FC Mobile - ALL STORE</title>
+<title>EA SPORTS FC Mobile - ALL STORE</title>
 
 <style>
 
@@ -67,6 +67,7 @@ padding:15px;
 }
 
 .card{
+position:relative;
 background:#181818;
 border:2px solid #00aeff;
 border-radius:15px;
@@ -130,6 +131,8 @@ button:hover{
 background:#0090d4;
 }
 
+button:disabled{opacity:.6;cursor:not-allowed;}
+
 .ringkasan{
 margin-top:20px;
 padding:15px;
@@ -173,6 +176,43 @@ color:white;
 color:red;
 }
 
+.judul{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:8px;
+font-size:24px;
+font-weight:bold;
+color:#00aeff;
+text-align:center;
+margin-bottom:20px;
+}
+
+.judul img{
+width:65px;
+height:65px;
+object-fit:contain;
+border-radius:10px;
+}
+
+  /* Katalog nominal berbentuk kartu */
+#produk { display:none; }
+.katalog-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;margin-bottom:10px}
+.katalog-label label{margin:0}
+#statusProduk{color:#aaa;font-size:12px;text-align:right}
+.grid-produk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 18px}
+.kartu-produk{appearance:none;width:100%;min-width:0;margin:0;padding:14px 10px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;text-align:left;color:#fff;background:#171522;border:2px solid #342a49;border-radius:14px;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+.kartu-produk:hover{background:#211b31;border-color:#8a65ff}
+.kartu-produk:active{transform:scale(.98)}
+.kartu-produk.terpilih{border-color:#00aeff;background:#102334;box-shadow:0 0 0 1px #00aeff33,0 5px 16px #00aeff18}
+.kartu-produk .nama-produk{font-size:15px;line-height:1.35;font-weight:700;overflow-wrap:anywhere}
+.kartu-produk .harga-produk{color:#00d9ff;font-size:17px;font-weight:800;line-height:1.25}
+.kartu-produk .pilih-hint{display:block;color:#aaa2bb;font-size:11px;margin-top:5px}
+.kartu-produk.terpilih .pilih-hint{color:#8be6ff}
+.kosong-produk{grid-column:1/-1;padding:18px 12px;border:1px dashed #514566;border-radius:12px;color:#c8c1d7;text-align:center;font-size:14px}
+@media(max-width:360px){.grid-produk{gap:8px}.kartu-produk{padding:12px 8px}.kartu-produk .nama-produk{font-size:13px}.kartu-produk .harga-produk{font-size:15px}}
+
 </style>
 
 </head>
@@ -181,15 +221,7 @@ color:red;
 
 <div class="navbar">
 
-<div class="logo">🔥 ALL STORE</div>
-
 <a href="topupgame.html" class="back">⬅ Kembali</a>
-
-</div>
-
-<div class="banner">
-
-<img src="https://i.ibb.co.com/tpmXsy3m/1782832549501.jpg" alt="FC Mobile">
 
 </div>
 
@@ -197,27 +229,30 @@ color:red;
 
 <div class="card">
 
-<h2>🔥 Top Up FC Mobile</h2>
+<div class="judul">
+  <img src="https://i.ibb.co.com/HDMTDHp2/EA-FC-Oct-2025.png" alt="EA SPORTS FC Mobile">
+  <span>EA SPORTS FC Mobile</span>
+</div>
 
 <label>🆔 User ID</label>
 <input type="text" id="uid" placeholder="Masukkan User ID">
 
-<label>🌍 Zone ID</label>
-<input type="text" id="server" placeholder="Masukkan Zone ID">
-
-<label>💎 Pilih Produk</label>
-<select id="produk">
+  <div class="katalog-label">
+  <label>💎 Pilih Nominal Top Up</label>
+  <span id="statusProduk">Memuat produk...</span>
+</div>
+<div id="gridProduk" class="grid-produk" aria-label="Pilihan nominal EA SPORTS FC Mobile">
+  <div class="kosong-produk">Memuat pilihan nominal...</div>
+</div>
+<select id="produk" aria-hidden="true" tabindex="-1">
 <option value="">-- Pilih Produk --</option>
 </select>
 
-<label>💳 Metode Pembayaran</label>
-<select id="payment">
-<option>DANA</option>
-<option>GoPay</option>
-<option>OVO</option>
-<option>ShopeePay</option>
-<option>QRIS</option>
-</select>
+  <label>💳 Pembayaran</label>
+<div id="walletInfo" style="padding:13px;background:#111;border:1px solid #00aeff;border-radius:10px;margin-bottom:12px;">
+  Saldo ALL STORE: <strong id="walletBalance">Memuat saldo...</strong>
+  <div style="font-size:12px;color:#aaa;margin-top:6px;">Pembelian akan memotong saldo akun ALL STORE.</div>
+</div>
 
 <div id="hargaTotal">
 💰 Total Harga: Rp0
@@ -242,14 +277,9 @@ color:red;
 <span class="close" onclick="tutupPeringatan()">&times;</span>
 
 <b>⚠️ PERHATIAN!</b><br><br>
-
-• 🚧 Layanan Belum Tersedia
-
-Maaf, layanan top up untuk game ini sedang dalam proses penambahan.
-
-Silakan cek kembali nanti.
-
-🔥 ALL STORE
+  • Pastikan User ID sudah benar.<br>
+• Pastikan saldo Wallet mencukupi.<br>
+• Jika transaksi gagal dan memenuhi ketentuan refund, saldo akan dikembalikan.
 
 </div>
 
@@ -259,76 +289,293 @@ Silakan cek kembali nanti.
 
 <script>
 
-const daftarProduk = [
-];
-
+  const URL_API_GAME = "https://api.allstoreid.my.id/digiflazz/game-products";
 const produk = document.getElementById("produk");
+const gridProduk = document.getElementById("gridProduk");
+const statusProduk = document.getElementById("statusProduk");
+let daftarProduk = [];
+let produkBySku = new Map();
 
-produk.innerHTML = '<option value="">-- Pilih Produk --</option>';
+// Harga jual ALL STORE: harga provider + markup 3%, dibulatkan ke atas.
+function hitungHargaJual(hargaModal) {
+  return Math.ceil(Number(hargaModal) * 1.03);
+  }
 
-daftarProduk.forEach(item=>{
-produk.innerHTML += `
-<option value="${item.harga}">
-${item.nama} - Rp${item.harga.toLocaleString("id-ID")}
-</option>`;
-});
-
-produk.addEventListener("change", function(){
-
-let harga = this.value || 0;
-let teks = this.options[this.selectedIndex].text;
-
-document.getElementById("hargaTotal").innerHTML =
-"💰 Total Harga: Rp"+Number(harga).toLocaleString("id-ID");
-
-document.getElementById("ringProduk").innerHTML =
-"💎 Produk : "+teks;
-
-document.getElementById("ringHarga").innerHTML =
-"💰 Harga : Rp"+Number(harga).toLocaleString("id-ID");
-
-});
-
-document.getElementById("pesanBtn").addEventListener("click", function(){
-
-let uid=document.getElementById("uid").value;
-let server=document.getElementById("server").value;
-let pembayaran=document.getElementById("payment").value;
-
-if(uid==""){
-alert("Masukkan User ID!");
-return;
+function formatRupiah(angka) {
+  return Number(angka).toLocaleString("id-ID");
 }
 
-if(produk.value==""){
-alert("Pilih produk terlebih dahulu!");
-return;
-}
+  function pilihKartuProduk(sku) {
+  const item = produkBySku.get(sku);
+  if (!item) return;
+  produk.value = sku;
+  gridProduk.querySelectorAll(".kartu-produk").forEach(kartu => {
+    const aktif = kartu.dataset.sku === sku;
+    kartu.classList.toggle("terpilih", aktif);
+    kartu.setAttribute("aria-pressed", aktif ? "true" : "false");
+    const hint = kartu.querySelector(".pilih-hint");
+    if (hint) hint.textContent = aktif ? "✓ Dipilih" : "Ketuk untuk memilih";
+  });
+  document.getElementById("hargaTotal").textContent = "💰 Total Harga: Rp" + formatRupiah(item.harga);
+  document.getElementById("ringProduk").textContent = "💎 Produk : " + item.nama;
+  document.getElementById("ringHarga").textContent = "💰 Harga : Rp" + formatRupiah(item.harga);
+  }
 
-let pesan=`Halo Admin ALL STORE
+  async function muatProduk() {
+  produk.innerHTML = '<option value="">Memuat produk EA SPORTS FC Mobile...</option>';
+  gridProduk.innerHTML = '<div class="kosong-produk">Memuat pilihan nominal...</div>';
+  statusProduk.textContent = "Memuat produk...";
+  try {
+    const response = await fetch(URL_API_GAME);
+    if (!response.ok) throw new Error("Server API merespons " + response.status);
+    const hasil = await response.json();
+    if (!hasil.success || !Array.isArray(hasil.data)) throw new Error("Format data produk tidak sesuai");
 
-Saya ingin Top Up FC Mobile.
+    daftarProduk = hasil.data
+      .filter(item => String(item.brand || "").toUpperCase().includes("FC MOBILE"))
+      .filter(item => !/cek username|check username/i.test(String(item.product_name || "")))
+      .map(item => ({
+        nama: item.product_name,
+        sku: item.buyer_sku_code,
+        hargaModal: Number(item.price),
+        harga: hitungHargaJual(Number(item.price))
+      }))
+      .filter(item => item.nama && item.sku && Number.isFinite(item.hargaModal) && item.hargaModal > 0);
 
-🆔 UID : ${uid}
-🌍 Server : ${server}
+    produkBySku = new Map(daftarProduk.map(item => [item.sku, item]));
+    produk.innerHTML = '<option value="">-- Pilih Produk --</option>';
+    gridProduk.innerHTML = "";
+    if (daftarProduk.length === 0) {
+      produk.innerHTML = '<option value="">Produk EA SPORTS FC Mobile belum tersedia</option>';
+      gridProduk.innerHTML = '<div class="kosong-produk">Produk EA SPORTS FC Mobile belum tersedia. Coba lagi nanti.</div>';
+      statusProduk.textContent = "0 produk";
+      return;
+  }
 
-💎 Produk : ${produk.options[produk.selectedIndex].text}
+    statusProduk.textContent = daftarProduk.length + " produk tersedia";
+    daftarProduk.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.sku;
+      option.textContent = `${item.nama} - Rp${formatRupiah(item.harga)}`;
+      produk.appendChild(option);
 
-💰 Harga : Rp${Number(produk.value).toLocaleString("id-ID")}
+      const kartu = document.createElement("button");
+      kartu.type = "button";
+      kartu.className = "kartu-produk";
+      kartu.dataset.sku = item.sku;
+      kartu.setAttribute("aria-pressed", "false");
 
-💳 Pembayaran : ${pembayaran}
+      const nama = document.createElement("span");
+      nama.className = "nama-produk";
+      nama.textContent = item.nama;
+      const detail = document.createElement("span");
+      const harga = document.createElement("span");
+      harga.className = "harga-produk";
+      harga.textContent = "Rp" + formatRupiah(item.harga);
+      const hint = document.createElement("span");
+      hint.className = "pilih-hint";
+      hint.textContent = "Ketuk untuk memilih";
+      detail.append(harga, hint);
+      kartu.append(nama, detail);
+      kartu.addEventListener("click", () => pilihKartuProduk(item.sku));
+      gridProduk.appendChild(kartu);
+    });
+  } catch (error) {
+    console.error("Gagal memuat produk game:", error);
+    produk.innerHTML = '<option value="">Produk gagal dimuat — muat ulang halaman</option>';
+    gridProduk.innerHTML = '<div class="kosong-produk">Produk gagal dimuat. Periksa koneksi lalu muat ulang halaman.</div>';
+    statusProduk.textContent = "Gagal dimuat";
+    alert("Produk EA SPORTS FC Mobile gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.");
+  }
+  }
 
-Terima kasih.`;
-
-window.open(
-"https://wa.me/6281545462473?text="+encodeURIComponent(pesan)
-);
-
+        produk.addEventListener("change", function() {
+  if (this.value) pilihKartuProduk(this.value);
 });
 
-function tutupPeringatan(){
-document.getElementById("peringatan").style.display="none";
+let requestId = null;
+let orderTerakhir = null;
+
+function buatUUID() {
+  return crypto.randomUUID();
 }
+
+async function pesanSekarang() {
+  const token = sessionStorage.getItem("allstore_token");
+  const uid = document.getElementById("uid").value.trim();
+  const server = document.getElementById("server").value.trim();
+  const sku = produk.value;
+
+  if (!token) {
+    alert("Silakan login terlebih dahulu.");
+    location.href = "login.html";
+    return;
+  }
+
+  if (!uid || !/^\d+$/.test(uid)) {
+    alert("Masukkan User ID yang benar.");
+    return;
+  }
+
+  if (!sku) {
+    alert("Pilih nominal terlebih dahulu.");
+    return;
+  }
+
+  if (!requestId) requestId = buatUUID();
+
+  const tombol = document.getElementById("pesanBtn");
+  tombol.disabled = true;
+  tombol.textContent = "Memproses...";
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/game/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        buyer_sku_code: sku,
+        customer_no: uid + server,
+        client_request_id: requestId
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error(hasil.message || hasil.error || "Pesanan gagal.");
+    }
+
+    requestId = null;
+    orderTerakhir = hasil.order_id;
+
+    document.getElementById("hasilPesanan")?.remove();
+
+    const hasilBox = document.createElement("div");
+    hasilBox.id = "hasilPesanan";
+    hasilBox.className = "ringkasan";
+    hasilBox.innerHTML =
+      "<h3>Hasil Pesanan</h3>" +
+      "<p>ID Pesanan: " + orderTerakhir + "</p>" +
+      "<p>Status: " + (hasil.status || "processing") + "</p>" +
+      "<p>Harga: Rp" + formatRupiah(hasil.price || 0) + "</p>";
+
+    document.querySelector(".ringkasan").after(hasilBox);
+
+    if (hasil.status === "processing" || hasil.status === "unknown") {
+      const cek = document.createElement("button");
+      cek.id = "cekStatusBtn";
+      cek.textContent = "Cek Status Pesanan";
+      cek.onclick = cekStatus;
+      hasilBox.after(cek);
+    }
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    tombol.disabled = false;
+    tombol.textContent = "Pesan Sekarang";
+  }
+}
+
+async function cekStatus() {
+  const token = sessionStorage.getItem("allstore_token");
+
+  if (!token || !orderTerakhir) return;
+
+  const tombol = document.getElementById("cekStatusBtn");
+  tombol.disabled = true;
+  tombol.textContent = "Memeriksa...";
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/game/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        action: "check_status",
+        order_id: orderTerakhir
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error(hasil.message || hasil.error || "Gagal cek status.");
+    }
+
+    document.querySelector("#hasilPesanan p:nth-child(2)").textContent =
+  "Status: " + hasil.status;
+
+if (hasil.price !== undefined && hasil.price !== null) {
+  document.querySelector("#hasilPesanan p:nth-child(3)").textContent =
+    "Harga: Rp" + formatRupiah(hasil.price);
+}
+
+if (hasil.status === "success" || hasil.status === "failed") {
+  tombol.remove();
+}
+
+alert("Status pesanan: " + hasil.status);
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    tombol.disabled = false;
+    tombol.textContent = "Cek Status Pesanan";
+  }
+}
+
+document.getElementById("pesanBtn").addEventListener("click", pesanSekarang);
+
+async function muatSaldo() {
+  const token = sessionStorage.getItem("allstore_token");
+  const elemen = document.getElementById("walletBalance");
+
+  if (!token) {
+    elemen.textContent = "Login untuk melihat saldo";
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.allstoreid.my.id/wallet/balance", {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Gagal memuat saldo");
+    }
+
+    const saldo = Number(
+      hasil.balance ?? hasil.wallet?.balance ?? hasil.data?.balance
+    );
+
+    if (!Number.isFinite(saldo)) {
+      throw new Error("Format saldo tidak dikenali");
+    }
+
+    elemen.textContent = "Rp" + formatRupiah(saldo);
+
+  } catch (error) {
+    elemen.textContent = "Gagal memuat saldo";
+    console.error(error);
+  }
+}
+
+function tutupPeringatan() {
+  document.getElementById("peringatan").style.display = "none";
+}
+
+muatProduk();
+muatSaldo();
 
 </script>
 
