@@ -332,7 +332,7 @@ function formatRupiah(angka) {
     if (!hasil.success || !Array.isArray(hasil.data)) throw new Error("Format data produk tidak sesuai");
 
     daftarProduk = hasil.data
-      .filter(item => String(item.brand || "").toUpperCase().includes("Valorant"))
+      .filter(item => String(item.brand || "").toUpperCase().includes("VALORANT"))
       .filter(item => !/cek username|check username/i.test(String(item.product_name || "")))
       .map(item => ({
         nama: item.product_name,
