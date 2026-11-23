@@ -208,6 +208,81 @@ border-radius:10px;
 .kartu-produk.terpilih .pilih-hint{color:#8be6ff}
 .kosong-produk{grid-column:1/-1;padding:18px 12px;border:1px dashed #514566;border-radius:12px;color:#c8c1d7;text-align:center;font-size:14px}
 @media(max-width:360px){.grid-produk{gap:8px}.kartu-produk{padding:12px 8px}.kartu-produk .nama-produk{font-size:13px}.kartu-produk .harga-produk{font-size:15px}}
+  /* Penyesuaian class AXIS */
+.summary {
+    margin-top: 20px;
+    padding: 15px;
+    background: #111;
+    border: 2px solid #00aeff;
+    border-radius: 10px;
+}
+
+.summary h3 {
+    text-align: center;
+    color: #00aeff;
+    margin-bottom: 10px;
+}
+
+.summary p {
+    margin: 8px 0;
+}
+
+.warning {
+    position: relative;
+    background: #2b1b00;
+    border: 2px solid #ffb300;
+    color: #ffd54f;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 12px 0 18px;
+}
+
+.product {
+    width: 100%;
+    margin: 0;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    background: #171522;
+    border: 2px solid #342a49;
+    border-radius: 14px;
+    cursor: pointer;
+}
+
+.product.selected {
+    border-color: #00aeff;
+    background: #102334;
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.product-price {
+    color: #00d9ff;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.buy {
+    background: #00aeff;
+}
+
+.tab.active {
+    background: #00aeff;
+    color: white;
+  }
 </style>
 </head>
     
