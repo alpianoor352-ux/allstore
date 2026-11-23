@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0d0d">
@@ -343,12 +344,19 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-mode");
 }
 
-function getToken() {
-  for (const key of TOKEN_KEYS) {
-    const value = localStorage.getItem(key);
-    if (value) return value;
+async function getToken().
+const supabase = window.supabase.createClient(
+  "https://sxfmmmfebcepvlwzelbi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4Zm1tbWZlYmNlcHZsd3plbGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDkzOTYsImV4cCI6MjEwMDc4NTM5Nn0.0uxfmCKIVXkhG1Nw4wlKmfPy2hb_w4CbLxo0tDClAWM"
+);
+
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error || !data.session) {
+    return null;
   }
-  return null;
+
+  return data.session.access_token;
 }
 
 async function loadProducts() {
@@ -476,7 +484,7 @@ function updateSelected() {
 
 async function buyProduct() {
   const phone = document.getElementById("phone").value.trim();
-  const token = getToken();
+  const token = await getToken();
 
   if (!/^08[0-9]{8,13}$/.test(phone)) {
     alert("Masukkan nomor HP yang valid.");
