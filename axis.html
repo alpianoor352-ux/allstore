@@ -344,21 +344,9 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-mode");
 }
 
-async function getToken().
-const supabase = window.supabase.createClient(
-  "https://sxfmmmfebcepvlwzelbi.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4Zm1tbWZlYmNlcHZsd3plbGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDkzOTYsImV4cCI6MjEwMDc4NTM5Nn0.0uxfmCKIVXkhG1Nw4wlKmfPy2hb_w4CbLxo0tDClAWM"
-);
-
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error || !data.session) {
-    return null;
-  }
-
-  return data.session.access_token;
+async function getToken() {
+  return sessionStorage.getItem("allstore_token");
 }
-
 async function loadProducts() {
   const grid = document.getElementById("productGrid");
 
