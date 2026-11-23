@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,12 +9,13 @@
 
 <style>
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
   background: #0d0d0d;
   color: white;
 }
@@ -21,176 +23,203 @@ body {
 .navbar {
   background: #111;
   padding: 15px;
-  text-align: center;
-  border-bottom: 2px solid #00aeff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 0 10px #00aeff44;
-}
-
-.navbar h1 {
-  color: #00aeff;
-  margin: 0;
-  font-size: 28px;
-}
-
-.navmenu {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 12px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #00aeff;
+  box-shadow: 0 0 15px #00aeff33;
 }
 
-.navmenu a {
-  color: white;
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: #00aeff;
+}
+
+.back {
   text-decoration: none;
-  background: #161616;
-  padding: 9px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  background: #00aeff;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.banner {
+  width: 100%;
+  height: 220px;
+  background: #171717;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .container {
-  max-width: 600px;
-  margin: auto;
-  padding: 18px;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+.card {
+  background: #181818;
+  border: 2px solid #00aeff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 15px #00aeff22;
 }
 
 .operator {
   text-align: center;
-  padding: 20px;
   margin-bottom: 20px;
-  background: #161616;
-  border: 1px solid #00aeff;
-  border-radius: 15px;
-  box-shadow: 0 0 12px #00aeff44;
+}
+
+.operator img {
+  width: 95px;
+  height: 75px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 
 .operator h2 {
   color: #00aeff;
-  margin: 0 0 8px;
-  font-size: 25px;
+  margin-bottom: 7px;
 }
 
 .operator p {
   color: #aaa;
   font-size: 13px;
-  margin: 0;
 }
 
-.section {
-  margin-bottom: 22px;
-}
-
-.section-title {
+label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-weight: bold;
   color: #00aeff;
-  font-size: 16px;
-  margin-bottom: 12px;
 }
 
 input {
   width: 100%;
-  padding: 14px;
-  border: 1px solid #00aeff;
-  border-radius: 10px;
-  background: #161616;
+  padding: 13px;
+  background: #222;
   color: white;
-  font-size: 16px;
+  border: 2px solid #333;
+  border-radius: 10px;
   outline: none;
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
 input:focus {
-  box-shadow: 0 0 10px #00aeff66;
+  border-color: #00aeff;
+  box-shadow: 0 0 10px #00aeff55;
 }
 
 .tabs {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .tab {
   padding: 14px;
-  background: #161616;
-  border: 1px solid #333;
+  background: #222;
+  border: 2px solid #333;
   border-radius: 10px;
   color: white;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .tab.active {
   background: #00aeff;
   border-color: #00aeff;
-  color: white;
-  box-shadow: 0 0 12px #00aeff66;
 }
 
 .search-box {
-  margin-bottom: 15px;
+  margin-top: 5px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  margin-top: 12px;
 }
 
-.card {
-  background: #161616;
+.product-card {
+  background: #111;
   border: 1px solid #00aeff;
   border-radius: 12px;
   padding: 14px 10px;
   text-align: center;
-  box-shadow: 0 0 8px #00aeff33;
   cursor: pointer;
   transition: .2s;
 }
 
-.card:hover {
-  box-shadow: 0 0 15px #00aeff;
+.product-card:hover {
+  box-shadow: 0 0 12px #00aeff88;
 }
 
-.card.selected {
+.product-card.selected {
   background: #00344d;
   border: 2px solid #00aeff;
 }
 
-.card h3 {
+.product-card h3 {
   font-size: 13px;
-  margin: 0 0 10px;
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 .price {
-  color: #00aeff;
+  color: #00ff88;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
 }
 
-.card button {
-  margin-top: 12px;
+.product-card button {
   width: 100%;
   padding: 9px;
-  border: none;
-  border-radius: 7px;
+  margin-top: 12px;
   background: #00aeff;
   color: white;
+  border: none;
+  border-radius: 7px;
   font-weight: bold;
   cursor: pointer;
+}
+
+#hargaTotal {
+  margin-top: 18px;
+  padding: 15px;
+  background: #111;
+  border: 2px solid #00aeff;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00ff88;
+  text-align: center;
 }
 
 .buy-button {
   width: 100%;
   padding: 15px;
-  border: none;
-  border-radius: 10px;
+  margin-top: 20px;
   background: #00aeff;
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
-  margin-top: 12px;
 }
 
 .buy-button:disabled {
@@ -198,7 +227,47 @@ input:focus {
   cursor: not-allowed;
 }
 
+.ringkasan {
+  margin-top: 20px;
+  padding: 15px;
+  background: #111;
+  border: 2px solid #00aeff;
+  border-radius: 10px;
+}
+
+.ringkasan h3 {
+  text-align: center;
+  color: #00aeff;
+  margin-bottom: 12px;
+}
+
+.ringkasan p {
+  margin: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+.peringatan {
+  position: relative;
+  background: #2b1b00;
+  border: 2px solid #ffb300;
+  color: #ffd54f;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.close {
+  position: absolute;
+  top: 8px;
+  right: 13px;
+  font-size: 22px;
+  cursor: pointer;
+  color: white;
+}
+
 .message {
+  grid-column: 1 / -1;
   text-align: center;
   color: #aaa;
   padding: 20px 5px;
@@ -214,31 +283,19 @@ input:focus {
   margin-top: 30px;
 }
 
-.light-mode {
-  background: #f5f5f5;
-  color: #111;
-}
+@media(max-width:400px) {
+  .logo {
+    font-size: 21px;
+  }
 
-.light-mode .navbar,
-.light-mode .operator,
-.light-mode .card,
-.light-mode .tab {
-  background: white;
-  color: #111;
-}
+  .back {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
 
-.light-mode .navmenu a,
-.light-mode input {
-  background: #eee;
-  color: #111;
-}
-
-.light-mode .card.selected {
-  background: #d9f3ff;
-}
-
-.light-mode .operator p {
-  color: #555;
+  .container {
+    padding: 12px;
+  }
 }
 </style>
 </head>
@@ -246,79 +303,91 @@ input:focus {
 <body>
 
 <div class="navbar">
-  <h1>ALL STORE</h1>
-  <div class="navmenu">
-    <a href="index.html">Home</a>
-    <a href="pulsa.html">Pulsa</a>
-    <a href="topupgame.html">Game</a>
-  </div>
+  <div class="logo">🔥 ALL STORE</div>
+  <a href="pulsa.html" class="back">⬅ Kembali</a>
+</div>
+
+<div class="banner">
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/512px-Axis_logo_2015.svg.png"
+    alt="AXIS"
+    onerror="this.style.display='none'"
+  >
 </div>
 
 <div class="container">
 
+<div class="card">
+
   <div class="operator">
-    <h2>AXIS</h2>
-    <p>Pulsa dan Paket Data AXIS</p>
-  </div>
-
-  <div class="section">
-    <div class="section-title">1. Masukkan Nomor HP</div>
-    <input
-      type="tel"
-      id="phone"
-      placeholder="08xxxxxxxxxx"
-      maxlength="15"
-      autocomplete="tel"
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/512px-Axis_logo_2015.svg.png"
+      alt="Logo AXIS"
+      onerror="this.style.display='none'"
     >
+    <h2>🔥 Pulsa & Paket Data AXIS</h2>
+    <p>Layanan isi ulang resmi ALL STORE</p>
   </div>
 
-  <div class="section">
-    <div class="section-title">2. Pilih Layanan</div>
-    <div class="tabs">
-      <button class="tab active" id="pulsaTab"
-        onclick="selectService('Pulsa')">
-        Pulsa
-      </button>
+  <label>📱 Nomor HP</label>
+  <input
+    type="tel"
+    id="phone"
+    placeholder="Masukkan nomor AXIS"
+    maxlength="15"
+    autocomplete="tel"
+  >
 
-      <button class="tab" id="dataTab"
-        onclick="selectService('Data')">
-        Paket Data
-      </button>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">3. Pilih Produk</div>
-
-    <input
-      class="search-box"
-      id="searchInput"
-      placeholder="Cari nominal atau paket..."
-      oninput="renderProducts()"
-    >
-
-    <div class="grid" id="productGrid">
-      <div class="message">Memuat katalog produk...</div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">4. Konfirmasi Pembelian</div>
-
-    <div class="card" id="selectedInfo">
-      Belum ada produk dipilih
-    </div>
-
-    <button
-      class="buy-button"
-      id="buyButton"
-      onclick="buyProduct()"
-      disabled
-    >
-      BELI SEKARANG
+  <label>💳 Pilih Layanan</label>
+  <div class="tabs">
+    <button class="tab active" id="pulsaTab"
+      onclick="selectService('Pulsa')">
+      Pulsa
+    </button>
+    <button class="tab" id="dataTab"
+      onclick="selectService('Data')">
+      Paket Data
     </button>
   </div>
 
+  <label>📦 Pilih Produk</label>
+  <input
+    class="search-box"
+    id="searchInput"
+    placeholder="Cari nominal atau paket..."
+    oninput="renderProducts()"
+  >
+
+  <div class="grid" id="productGrid">
+    <div class="message">Memuat katalog produk...</div>
+  </div>
+
+  <div id="hargaTotal">
+    💰 Total Harga: Rp0
+  </div>
+
+  <button class="buy-button" id="buyButton"
+    onclick="buyProduct()" disabled>
+    🟢 BELI SEKARANG
+  </button>
+
+  <div class="ringkasan">
+    <h3>📋 Ringkasan Pesanan</h3>
+    <p id="ringNomor">📱 Nomor HP: -</p>
+    <p id="ringProduk">💎 Produk: -</p>
+    <p id="ringHarga">💰 Harga: Rp0</p>
+  </div>
+
+  <div id="peringatan" class="peringatan">
+    <span class="close" onclick="tutupPeringatan()">&times;</span>
+    <b>⚠️ PERHATIAN!</b><br><br>
+    • Pastikan nomor HP sudah benar.<br>
+    • Periksa produk dan harga sebelum membeli.<br>
+    • Jangan melakukan pemesanan berulang ketika transaksi masih diproses.<br>
+    • Jika transaksi bermasalah, hubungi Admin ALL STORE.
+  </div>
+
+</div>
 </div>
 
 <footer class="footer">
@@ -327,20 +396,13 @@ input:focus {
 
 <script>
 
-// Ganti jika API menggunakan domain berbeda.
 const API_BASE = "https://api.allstoreid.my.id";
-
-// Sesuaikan dengan nama penyimpanan token
-// login ALL STORE.
 const TOKEN_KEYS = ["token", "authToken", "accessToken"];
 
 let products = [];
 let selectedProduct = null;
 let currentService = "Pulsa";
-
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-mode");
-}
+let visibleProducts = [];
 
 function getToken() {
   for (const key of TOKEN_KEYS) {
@@ -364,19 +426,18 @@ async function loadProducts() {
       throw new Error(result.message || "Katalog belum tersedia");
     }
 
-    products = result.products.filter(product => {
-      return String(product.brand || "")
-        .toUpperCase().includes("AXIS");
-    });
+    products = result.products.filter(product =>
+      String(product.brand || "")
+        .toUpperCase().includes("AXIS")
+    );
 
     renderProducts();
 
   } catch (error) {
     grid.innerHTML = `
-      <div class="message" style="grid-column:1/-1">
+      <div class="message">
         ${escapeHTML(error.message)}
-        <br><br>
-        Silakan coba lagi nanti.
+        <br><br>Silakan coba lagi nanti.
       </div>
     `;
   }
@@ -403,75 +464,77 @@ function renderProducts() {
   const keyword = document.getElementById("searchInput")
     .value.toLowerCase();
 
-  const filtered = products.filter(product => {
+  visibleProducts = products.filter(product => {
     const category = String(product.category || "").toLowerCase();
     const name = String(product.product_name || "").toLowerCase();
 
-    const isPulsa = category.includes("pulsa");
-    const isData = category.includes("data");
-
     const matchesService = currentService === "Pulsa"
-      ? isPulsa
-      : isData;
+      ? category.includes("pulsa")
+      : category.includes("data");
 
-    return matchesService &&
-      name.includes(keyword);
+    return matchesService && name.includes(keyword);
   });
 
-  if (!filtered.length) {
+  if (!visibleProducts.length) {
     grid.innerHTML = `
-      <div class="message" style="grid-column:1/-1">
+      <div class="message">
         Produk ${currentService} AXIS belum tersedia.
       </div>
     `;
     return;
   }
 
-  grid.innerHTML = filtered.map((product, index) => {
+  grid.innerHTML = visibleProducts.map((product, index) => {
     const selected = selectedProduct &&
       selectedProduct.buyer_sku_code === product.buyer_sku_code;
 
     const price = Math.ceil(Number(product.price) * 1.03);
 
     return `
-      <div class="card ${selected ? "selected" : ""}">
+      <div class="product-card ${selected ? "selected" : ""}">
         <h3>${escapeHTML(product.product_name)}</h3>
         <div class="price">${formatRupiah(price)}</div>
         <button onclick="chooseProduct(${index})">
-          Pilih
+          Pilih Produk
         </button>
       </div>
     `;
   }).join("");
-
-  window.visibleProducts = filtered;
 }
 
 function chooseProduct(index) {
-  selectedProduct = window.visibleProducts[index];
+  selectedProduct = visibleProducts[index];
   updateSelected();
   renderProducts();
 }
 
 function updateSelected() {
-  const info = document.getElementById("selectedInfo");
+  const info = document.getElementById("ringProduk");
+  const priceInfo = document.getElementById("ringHarga");
+  const total = document.getElementById("hargaTotal");
   const button = document.getElementById("buyButton");
 
   if (!selectedProduct) {
-    info.textContent = "Belum ada produk dipilih";
+    info.textContent = "💎 Produk: -";
+    priceInfo.textContent = "💰 Harga: Rp0";
+    total.textContent = "💰 Total Harga: Rp0";
     button.disabled = true;
     return;
   }
 
   const price = Math.ceil(Number(selectedProduct.price) * 1.03);
 
-  info.innerHTML = `
-    <h3>${escapeHTML(selectedProduct.product_name)}</h3>
-    <div class="price">${formatRupiah(price)}</div>
-  `;
+  info.textContent = "💎 Produk: " + selectedProduct.product_name;
+  priceInfo.textContent = "💰 Harga: " + formatRupiah(price);
+  total.textContent = "💰 Total Harga: " + formatRupiah(price);
 
   button.disabled = false;
 }
+
+document.getElementById("phone").addEventListener("input", function() {
+  document.getElementById("ringNomor").textContent =
+    "📱 Nomor HP: " + (this.value.trim() || "-");
+});
 
 async function buyProduct() {
   const phone = document.getElementById("phone").value.trim();
@@ -492,10 +555,12 @@ async function buyProduct() {
     return;
   }
 
-  if (!confirm(
+  const confirmed = confirm(
     "Beli " + selectedProduct.product_name +
     " untuk nomor " + phone + "?"
-  )) return;
+  );
+
+  if (!confirmed) return;
 
   const button = document.getElementById("buyButton");
   button.disabled = true;
@@ -525,15 +590,15 @@ async function buyProduct() {
     }
 
     alert(
-      "Pesanan berhasil dikirim.\n" +
-      "ID Pesanan: " + (result.order_id || "-")
+      "Pesanan berhasil dikirim.\nID Pesanan: " +
+      (result.order_id || "-")
     );
 
   } catch (error) {
     alert(error.message);
   } finally {
     button.disabled = !selectedProduct;
-    button.textContent = "BELI SEKARANG";
+    button.textContent = "🟢 BELI SEKARANG";
   }
 }
 
@@ -549,6 +614,10 @@ function escapeHTML(value) {
     '"': "&quot;",
     "'": "&#039;"
   })[char]);
+}
+
+function tutupPeringatan() {
+  document.getElementById("peringatan").style.display = "none";
 }
 
 loadProducts();
