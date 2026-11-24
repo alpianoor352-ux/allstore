@@ -1,0 +1,556 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0d0d">
+<title>TELKOMSEL - ALL STORE</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0d0d0d;
+  color: white;
+}
+
+.navbar {
+  background: #111;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 2px solid #00aeff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 0 10px #00aeff44;
+}
+
+.navbar h1 {
+  color: #00aeff;
+  margin: 0;
+  font-size: 28px;
+}
+
+.navmenu {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.navmenu a {
+  color: white;
+  text-decoration: none;
+  background: #161616;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 18px;
+}
+
+.operator {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #161616;
+  border: 1px solid #00aeff;
+  border-radius: 15px;
+  box-shadow: 0 0 12px #00aeff44;
+}
+
+.operator h2 {
+  color: #00aeff;
+  margin: 0 0 8px;
+  font-size: 25px;
+}
+
+.operator p {
+  color: #aaa;
+  font-size: 13px;
+  margin: 0;
+}
+
+.section {
+  margin-bottom: 22px;
+}
+
+.section-title {
+  color: #00aeff;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #00aeff;
+  border-radius: 10px;
+  background: #161616;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  box-shadow: 0 0 10px #00aeff66;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.tab {
+  padding: 14px;
+  background: #161616;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab.active {
+  background: #00aeff;
+  border-color: #00aeff;
+  color: white;
+  box-shadow: 0 0 12px #00aeff66;
+}
+
+.search-box {
+  margin-bottom: 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.card {
+  background: #161616;
+  border: 1px solid #00aeff;
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: 0 0 8px #00aeff33;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.card:hover {
+  box-shadow: 0 0 15px #00aeff;
+}
+
+.card.selected {
+  background: #00344d;
+  border: 2px solid #00aeff;
+}
+
+.card h3 {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+
+.price {
+  color: #00aeff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.card button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 9px;
+  border: none;
+  border-radius: 7px;
+  background: #00aeff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.buy-button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #00aeff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.buy-button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.message {
+  text-align: center;
+  color: #aaa;
+  padding: 20px 5px;
+  font-size: 13px;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 12px;
+  border-top: 1px solid #222;
+  margin-top: 30px;
+}
+
+.light-mode {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.light-mode .navbar,
+.light-mode .operator,
+.light-mode .card,
+.light-mode .tab {
+  background: white;
+  color: #111;
+}
+
+.light-mode .navmenu a,
+.light-mode input {
+  background: #eee;
+  color: #111;
+}
+
+.light-mode .card.selected {
+  background: #d9f3ff;
+}
+
+.light-mode .operator p {
+  color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <h1>ALL STORE</h1>
+  <div class="navmenu">
+    <a href="index.html">Home</a>
+    <a href="pulsa.html">Pulsa</a>
+    <a href="topupgame.html">Game</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="operator">
+    <h2>TELKOMSEL</h2>
+    <p>Pulsa dan Paket Data AXIS</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">1. Masukkan Nomor HP</div>
+    <input
+      type="tel"
+      id="phone"
+      placeholder="08xxxxxxxxxx"
+      maxlength="15"
+      autocomplete="tel"
+    >
+  </div>
+
+  <div class="section">
+    <div class="section-title">2. Pilih Layanan</div>
+    <div class="tabs">
+      <button class="tab active" id="pulsaTab"
+        onclick="selectService('Pulsa')">
+        Pulsa
+      </button>
+
+      <button class="tab" id="dataTab"
+        onclick="selectService('Data')">
+        Paket Data
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">3. Pilih Produk</div>
+
+    <input
+      class="search-box"
+      id="searchInput"
+      placeholder="Cari nominal atau paket..."
+      oninput="renderProducts()"
+    >
+
+    <div class="grid" id="productGrid">
+      <div class="message">Memuat katalog produk...</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">4. Konfirmasi Pembelian</div>
+
+    <div class="card" id="selectedInfo">
+      Belum ada produk dipilih
+    </div>
+
+    <button
+      class="buy-button"
+      id="buyButton"
+      onclick="buyProduct()"
+      disabled
+    >
+      BELI SEKARANG
+    </button>
+  </div>
+
+</div>
+
+<footer class="footer">
+  © 2026 ALL STORE - Digital Marketplace
+</footer>
+
+<script>
+
+// Ganti jika API menggunakan domain berbeda.
+const API_BASE = "https://api.allstoreid.my.id";
+
+// Sesuaikan dengan nama penyimpanan token
+// login ALL STORE.
+const TOKEN_KEYS = ["token", "authToken", "accessToken"];
+
+let products = [];
+let selectedProduct = null;
+let currentService = "Pulsa";
+
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-mode");
+}
+
+async function getToken() {
+  return sessionStorage.getItem("allstore_token");
+}
+async function loadProducts() {
+  const grid = document.getElementById("productGrid");
+
+  try {
+    const response = await fetch(
+      API_BASE + "/digiflazz/phone-products"
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Katalog belum tersedia");
+    }
+
+    products = result.products.filter(product => {
+      return String(product.brand || "")
+        .toUpperCase().includes("TELKOMSEL");
+    });
+
+    renderProducts();
+
+  } catch (error) {
+    grid.innerHTML = `
+      <div class="message" style="grid-column:1/-1">
+        ${escapeHTML(error.message)}
+        <br><br>
+        Silakan coba lagi nanti.
+      </div>
+    `;
+  }
+}
+
+function selectService(service) {
+  currentService = service;
+  selectedProduct = null;
+
+  document.getElementById("pulsaTab")
+    .classList.toggle("active", service === "Pulsa");
+
+  document.getElementById("dataTab")
+    .classList.toggle("active", service === "Data");
+
+  document.getElementById("searchInput").value = "";
+
+  updateSelected();
+  renderProducts();
+}
+
+function renderProducts() {
+  const grid = document.getElementById("productGrid");
+  const keyword = document.getElementById("searchInput")
+    .value.toLowerCase();
+
+  const filtered = products.filter(product => {
+    const category = String(product.category || "").toLowerCase();
+    const name = String(product.product_name || "").toLowerCase();
+
+    const isPulsa = category.includes("pulsa");
+    const isData = category.includes("data");
+
+    const matchesService = currentService === "Pulsa"
+      ? isPulsa
+      : isData;
+
+    return matchesService &&
+      name.includes(keyword);
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = `
+      <div class="message" style="grid-column:1/-1">
+        Produk ${currentService} TELKOMSEL belum tersedia.
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((product, index) => {
+    const selected = selectedProduct &&
+      selectedProduct.buyer_sku_code === product.buyer_sku_code;
+
+    const price = Math.ceil(Number(product.price) * 1.03);
+
+    return `
+      <div class="card ${selected ? "selected" : ""}">
+        <h3>${escapeHTML(product.product_name)}</h3>
+        <div class="price">${formatRupiah(price)}</div>
+        <button onclick="chooseProduct(${index})">
+          Pilih
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  window.visibleProducts = filtered;
+}
+
+function chooseProduct(index) {
+  selectedProduct = window.visibleProducts[index];
+  updateSelected();
+  renderProducts();
+}
+
+function updateSelected() {
+  const info = document.getElementById("selectedInfo");
+  const button = document.getElementById("buyButton");
+
+  if (!selectedProduct) {
+    info.textContent = "Belum ada produk dipilih";
+    button.disabled = true;
+    return;
+  }
+
+  const price = Math.ceil(Number(selectedProduct.price) * 1.03);
+
+  info.innerHTML = `
+    <h3>${escapeHTML(selectedProduct.product_name)}</h3>
+    <div class="price">${formatRupiah(price)}</div>
+  `;
+
+  button.disabled = false;
+}
+
+async function buyProduct() {
+  const phone = document.getElementById("phone").value.trim();
+  const token = await getToken();
+
+  if (!/^08[0-9]{8,13}$/.test(phone)) {
+    alert("Masukkan nomor HP yang valid.");
+    return;
+  }
+
+  if (!selectedProduct) {
+    alert("Pilih produk terlebih dahulu.");
+    return;
+  }
+
+  if (!token) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
+
+  if (!confirm(
+    "Beli " + selectedProduct.product_name +
+    " untuk nomor " + phone + "?"
+  )) return;
+
+  const button = document.getElementById("buyButton");
+  button.disabled = true;
+  button.textContent = "MEMPROSES...";
+
+  try {
+    const response = await fetch(
+      API_BASE + "/phone/order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+          buyer_sku_code: selectedProduct.buyer_sku_code,
+          customer_no: phone,
+          client_request_id: crypto.randomUUID()
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Transaksi gagal diproses");
+    }
+
+    alert(
+      "Pesanan berhasil dikirim.\n" +
+      "ID Pesanan: " + (result.order_id || "-")
+    );
+
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    button.disabled = !selectedProduct;
+    button.textContent = "BELI SEKARANG";
+  }
+}
+
+function formatRupiah(value) {
+  return "Rp" + Number(value).toLocaleString("id-ID");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
