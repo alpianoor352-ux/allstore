@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLN Nontaglis - ALL STORE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0d0d0d;color:white}
+.navbar{background:#111;padding:15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #00aeff}
+.logo{font-size:26px;font-weight:bold;color:#00aeff}
+.back{text-decoration:none;background:#00aeff;color:white;padding:10px 18px;border-radius:10px;font-weight:bold}
+.container{max-width:700px;margin:20px auto;padding:15px}
+.card{background:#181818;border:2px solid #00aeff;border-radius:15px;padding:20px;box-shadow:0 0 15px #00aeff22}
+.judul{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:24px;font-weight:bold;color:#00aeff;text-align:center;margin-bottom:20px}
+.logo-pln{width:65px;height:65px;border-radius:15px;background:#102c3c;border:2px solid #00aeff;display:flex;align-items:center;justify-content:center;font-size:34px}
+label{display:block;margin-top:15px;margin-bottom:8px;font-weight:bold;color:#00aeff}
+input{width:100%;padding:12px;background:#222;color:white;border:2px solid #333;border-radius:10px;outline:none;font-size:15px;margin-bottom:10px}
+input:focus{border-color:#00aeff;box-shadow:0 0 10px #00aeff55}
+.keterangan{font-size:12px;color:#aaa;margin-top:6px;line-height:1.5}
+.saldo{padding:13px;background:#111;border:1px solid #00aeff;border-radius:10px;margin-bottom:12px}
+#hargaTotal{margin-top:15px;padding:15px;background:#111;border:2px solid #00aeff;border-radius:10px;font-size:18px;font-weight:bold;color:#00ff88;text-align:center}
+button{width:100%;padding:15px;margin-top:20px;background:#00aeff;color:white;font-size:17px;font-weight:bold;border:none;border-radius:10px;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
+.ringkasan{margin-top:20px;padding:15px;background:#111;border:2px solid #00aeff;border-radius:10px}
+.ringkasan h3{text-align:center;color:#00aeff;margin-bottom:12px}
+.ringkasan p{margin:9px 0;line-height:1.5;overflow-wrap:anywhere}
+.peringatan{background:#2b1b00;border:2px solid #ffb300;color:#ffd54f;padding:15px;border-radius:10px;margin-top:20px;line-height:1.6}
+.close{float:right;font-size:22px;cursor:pointer;font-weight:bold;color:white}
+#hasilInquiry,#hasilPesanan{display:none}
+@media(max-width:400px){.container{padding:10px}.card{padding:15px}.judul{font-size:22px}}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+<a href="topuptagihan.html" class="back">⬅ Kembali</a>
+<div class="logo">ALL STORE</div>
+</div>
+
+<div class="container">
+<div class="card">
+
+<div class="judul">
+<div class="logo-pln">⚡</div>
+<span>PLN Nontaglis</span>
+</div>
+
+<label>🆔 Nomor Registrasi PLN</label>
+<input type="text" id="customerNo" inputmode="numeric" placeholder="Masukkan nomor registrasi" autocomplete="off">
+<div class="keterangan">Masukkan nomor registrasi sesuai bukti pendaftaran atau dokumen PLN.</div>
+
+<label>💳 Pembayaran</label>
+<div class="saldo">
+Saldo ALL STORE: <strong id="walletBalance">Memuat saldo...</strong>
+<div class="keterangan">Pembayaran menggunakan saldo Wallet ALL STORE.</div>
+</div>
+
+<div id="hargaTotal">💰 Total Harga: Rp0</div>
+
+<button id="cekBtn">🔍 Cek Tagihan</button>
+
+<div id="hasilInquiry" class="ringkasan">
+<h3>📋 Rincian PLN Nontaglis</h3>
+<div id="detailTagihan"></div>
+<button id="bayarBtn">💳 Bayar Sekarang</button>
+</div>
+
+<div id="hasilPesanan" class="ringkasan">
+<h3>📦 Hasil Transaksi</h3>
+<div id="detailPesanan"></div>
+<p id="pesanStatus"></p>
+<button id="cekStatusBtn" style="display:none">🔄 Cek Status Transaksi</button>
+</div>
+
+<div id="peringatan" class="peringatan">
+<span class="close" onclick="tutupPeringatan()">&times;</span>
+<b>⚠️ PERHATIAN!</b><br><br>
+• Pastikan nomor registrasi benar.<br>
+• Periksa rincian transaksi sebelum membayar.<br>
+• Pastikan saldo Wallet mencukupi.<br>
+• Jika transaksi masih diproses, jangan melakukan pembayaran ulang.<br>
+• Jangan mengulangi pembayaran ketika status belum jelas.
+</div>
+
+</div>
+</div>
+
+<script>
+const API="https://api.allstoreid.my.id";
+const SKU_NONTAGLIS="post792812";
+
+let refInquiry=null;
+let orderTerakhir=null;
+let sedangMemproses=false;
+
+const cekBtn=document.getElementById("cekBtn");
+const bayarBtn=document.getElementById("bayarBtn");
+const cekStatusBtn=document.getElementById("cekStatusBtn");
+
+function formatRupiah(angka){
+return Number(angka||0).toLocaleString("id-ID");
+}
+
+function tokenLogin(){
+return sessionStorage.getItem("allstore_token");
+}
+
+async function requestAPI(path,body=null){
+const token=tokenLogin();
+if(!token)throw new Error("Silakan login terlebih dahulu.");
+
+const options={
+method:body?"POST":"GET",
+headers:{"Authorization":"Bearer "+token}
+};
+
+if(body){
+options.headers["Content-Type"]="application/json";
+options.body=JSON.stringify(body);
+}
+
+const response=await fetch(API+path,options);
+const hasil=await response.json();
+
+if(!response.ok){
+throw new Error(hasil.message||hasil.error||"Permintaan gagal.");
+}
+return hasil;
+}
+
+function tambahBaris(container,label,value){
+const p=document.createElement("p");
+const strong=document.createElement("strong");
+strong.textContent=label+": ";
+p.append(strong,document.createTextNode(String(value??"-")));
+container.appendChild(p);
+}
+
+async function muatSaldo(){
+const elemen=document.getElementById("walletBalance");
+if(!tokenLogin()){
+elemen.textContent="Login untuk melihat saldo";
+return;
+}
+try{
+const hasil=await requestAPI("/wallet/balance");
+const saldo=Number(hasil.balance??hasil.wallet?.balance??hasil.data?.balance);
+if(!Number.isFinite(saldo))throw new Error("Format saldo tidak dikenali");
+elemen.textContent="Rp"+formatRupiah(saldo);
+}catch(error){
+elemen.textContent="Gagal memuat saldo";
+console.error(error);
+}
+}
+
+function tampilkanDeskripsi(desc){
+const box=document.getElementById("detailTagihan");
+if(!desc||typeof desc!=="object")return;
+
+if(desc.no_registrasi!==undefined){
+tambahBaris(box,"Nomor registrasi",desc.no_registrasi);
+}
+if(desc.tanggal_registrasi!==undefined){
+tambahBaris(box,"Tanggal registrasi",desc.tanggal_registrasi);
+}
+if(desc.transaksi!==undefined){
+tambahBaris(box,"Jenis transaksi",desc.transaksi);
+}
+if(desc.lembar_tagihan!==undefined){
+tambahBaris(box,"Jumlah tagihan",desc.lembar_tagihan);
+}
+}
+
+async function cekTagihan(){
+if(sedangMemproses)return;
+
+const customerNo=document.getElementById("customerNo").value.trim();
+if(!customerNo||!/^\d+$/.test(customerNo)){
+alert("Masukkan nomor registrasi PLN yang benar.");
+return;
+}
+
+sedangMemproses=true;
+cekBtn.disabled=true;
+cekBtn.textContent="Memeriksa...";
+document.getElementById("hasilInquiry").style.display="none";
+document.getElementById("hasilPesanan").style.display="none";
+document.getElementById("hargaTotal").textContent="Memeriksa tagihan...";
+
+try{
+const hasil=await requestAPI("/postpaid/order",{
+action:"inquiry",
+buyer_sku_code:SKU_NONTAGLIS,
+customer_no:customerNo
+});
+
+if(!hasil.success||!hasil.ref_id){
+throw new Error(hasil.message||"Inquiry PLN Nontaglis gagal.");
+}
+
+refInquiry=hasil.ref_id;
+
+const box=document.getElementById("detailTagihan");
+box.innerHTML="";
+
+tambahBaris(box,"Nama pelanggan",hasil.customer_name||"-");
+tambahBaris(box,"Nomor pelanggan",hasil.customer_no||customerNo);
+tambahBaris(box,"Produk",hasil.product_name||"PLN Nontaglis");
+tambahBaris(box,"Periode",hasil.periode||"-");
+tampilkanDeskripsi(hasil.description);
+tambahBaris(box,"Harga provider","Rp"+formatRupiah(hasil.provider_price));
+tambahBaris(box,"Biaya admin","Rp"+formatRupiah(hasil.admin));
+tambahBaris(box,"Total pembayaran","Rp"+formatRupiah(hasil.price));
+
+document.getElementById("hargaTotal").textContent="💰 Total Harga: Rp"+formatRupiah(hasil.price);
+document.getElementById("hasilInquiry").style.display="block";
+bayarBtn.disabled=false;
+bayarBtn.textContent="💳 Bayar Sekarang";
+
+}catch(error){
+refInquiry=null;
+document.getElementById("hargaTotal").textContent="💰 Total Harga: Rp0";
+alert(error.message);
+if(error.message.toLowerCase().includes("login"))location.href="login.html";
+}finally{
+sedangMemproses=false;
+cekBtn.disabled=false;
+cekBtn.textContent="🔍 Cek Tagihan";
+}
+}
+
+async function bayarSekarang(){
+if(sedangMemproses||!refInquiry)return;
+if(!confirm("Yakin ingin membayar transaksi PLN Nontaglis menggunakan saldo ALL STORE?"))return;
+
+sedangMemproses=true;
+bayarBtn.disabled=true;
+bayarBtn.textContent="Memproses pembayaran...";
+
+try{
+const hasil=await requestAPI("/postpaid/order",{
+action:"pay",
+ref_id:refInquiry
+});
+
+refInquiry=null;
+orderTerakhir=hasil.order_id||null;
+
+document.getElementById("hasilPesanan").style.display="block";
+const box=document.getElementById("detailPesanan");
+box.innerHTML="";
+
+tambahBaris(box,"ID pesanan",hasil.order_id||"-");
+tambahBaris(box,"Status",hasil.status||"-");
+if(hasil.price!==undefined)tambahBaris(box,"Harga","Rp"+formatRupiah(hasil.price));
+if(hasil.serial_number)tambahBaris(box,"Nomor serial",hasil.serial_number);
+
+document.getElementById("pesanStatus").textContent=hasil.message||"";
+document.getElementById("hasilInquiry").style.display="none";
+
+if(hasil.status==="processing"||hasil.status==="unknown"){
+cekStatusBtn.style.display=orderTerakhir?"block":"none";
+}else{
+cekStatusBtn.style.display="none";
+}
+
+await muatSaldo();
+
+}catch(error){
+alert(error.message);
+if(error.message.toLowerCase().includes("login"))location.href="login.html";
+bayarBtn.disabled=false;
+bayarBtn.textContent="💳 Bayar Sekarang";
+}finally{
+sedangMemproses=false;
+}
+}
+
+async function cekStatus(){
+if(sedangMemproses||!orderTerakhir)return;
+
+sedangMemproses=true;
+cekStatusBtn.disabled=true;
+cekStatusBtn.textContent="Memeriksa status...";
+
+try{
+const hasil=await requestAPI("/postpaid/order",{
+action:"check_status",
+order_id:orderTerakhir
+});
+
+const box=document.getElementById("detailPesanan");
+let statusRow=box.querySelector("[data-status]");
+
+if(!statusRow){
+statusRow=document.createElement("p");
+statusRow.dataset.status="true";
+box.appendChild(statusRow);
+}
+
+statusRow.textContent="Status: "+(hasil.status||"-");
+
+if(hasil.serial_number){
+tambahBaris(box,"Nomor serial",hasil.serial_number);
+}
+
+document.getElementById("pesanStatus").textContent=hasil.message||"";
+
+if(hasil.status==="success"||hasil.status==="failed"){
+cekStatusBtn.style.display="none";
+await muatSaldo();
+}else{
+cekStatusBtn.style.display="block";
+}
+
+}catch(error){
+alert(error.message);
+}finally{
+sedangMemproses=false;
+cekStatusBtn.disabled=false;
+cekStatusBtn.textContent="🔄 Cek Status Transaksi";
+}
+}
+
+function tutupPeringatan(){
+document.getElementById("peringatan").style.display="none";
+}
+
+cekBtn.addEventListener("click",cekTagihan);
+bayarBtn.addEventListener("click",bayarSekarang);
+cekStatusBtn.addEventListener("click",cekStatus);
+
+muatSaldo();
+</script>
+</body>
+  </html>
+  
