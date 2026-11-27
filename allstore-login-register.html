@@ -29,6 +29,17 @@
     .message.info{display:block;background:#102b38;color:#b8eaff;border:1px solid #145477}
     .hidden{display:none}
     .back{display:block;text-align:center;color:#00aeff;text-decoration:none;font-size:13px;margin-top:20px}
+    .forgot-link{
+  display:block;
+  text-align:right;
+  color:#00aeff;
+  text-decoration:none;
+  font-size:13px;
+  margin-top:10px;
+}
+.forgot-link:hover{
+  text-decoration:underline;
+}
     @media(max-width:380px){.panel{padding:20px}.brand h1{font-size:26px}}
   </style>
 </head>
@@ -52,7 +63,10 @@
         <input id="loginEmail" type="email" placeholder="nama@email.com" autocomplete="email" required>
         <label for="loginPassword">Kata sandi</label>
         <input id="loginPassword" type="password" placeholder="Masukkan kata sandi" autocomplete="current-password" minlength="8" required>
-        <button class="submit" type="submit">Masuk</button>
+
+<a href="lupa-pasword.html" class="forgot-link">Lupa Password?</a>
+
+<button class="submit" type="submit">Masuk</button>
       </form>
 
       <form id="registerForm" class="hidden">
