@@ -1,267 +1,281 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Top Up Game - ALL STORE</title>
+<title>Tagihan - ALL STORE</title>
 
 <style>
+*{
+  box-sizing:border-box;
+}
 
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
+body{
+  margin:0;
+  background:#0d0d0d;
+  color:white;
+  font-family:Arial,sans-serif;
 }
 
 .navbar{
-background:#111;
-padding:15px;
-border-bottom:2px solid #00aeff;
-text-align:center;
-position:sticky;
-top:0;
-z-index:1000;
-box-shadow:0 0 10px #00aeff44;
+  background:#111;
+  padding:15px;
+  border-bottom:2px solid #00aeff;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 0 10px #00aeff44;
 }
 
 .navbar h1{
-color:#00aeff;
-margin:0;
-font-size:28px;
+  color:#00aeff;
+  margin:0;
+  font-size:28px;
 }
 
 .navmenu{
-margin-top:10px;
-display:flex;
-justify-content:center;
-gap:15px;
-flex-wrap:wrap;
+  margin-top:10px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
 }
 
 .navmenu a{
-color:white;
-text-decoration:none;
-font-size:14px;
-padding:8px 12px;
-border-radius:8px;
-background:#161616;
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+  padding:8px 12px;
+  border-radius:8px;
+  background:#161616;
 }
 
 .search-box{
-margin-top:15px;
-display:flex;
-justify-content:center;
+  margin-top:15px;
+  display:flex;
+  justify-content:center;
 }
 
 .search-box input{
-width:80%;
-max-width:300px;
-padding:12px;
-border-radius:10px;
-background:#161616;
-color:white;
-border:1px solid #00aeff;
+  width:80%;
+  max-width:300px;
+  padding:12px;
+  border-radius:10px;
+  background:#161616;
+  color:white;
+  border:1px solid #00aeff;
+  outline:none;
 }
 
-.light-mode{
-background:#f5f5f5;
-color:#111;
+.container{
+  padding:15px;
 }
 
-.light-mode .navbar{
-background:#ffffff;
-border-bottom:2px solid #00aeff;
+.heading{
+  text-align:center;
+  margin:15px 0 20px;
 }
 
-.light-mode .navbar h1{
-color:#00aeff;
+.heading h2{
+  color:#00aeff;
+  font-size:21px;
 }
 
-.light-mode header{
-background:#ffffff;
-border-bottom:2px solid #00aeff;
+.heading p{
+  color:#aaa;
+  font-size:13px;
 }
 
-.light-mode header p,
-.light-mode header h2{
-color:#111;
-}
-
-.light-mode .card{
-background:#ffffff;
-color:#111;
-border:1px solid #00aeff;
-box-shadow:0 0 10px #00aeff44;
-}
-
-.light-mode .card h2{
-color:#00aeff;
-}
-
-.light-mode .navmenu a{
-background:#eeeeee;
-color:#111;
-}
-
-.light-mode .search-box input{
-background:#ffffff;
-color:#111;
-border:1px solid #00aeff;
-}
-
-.light-mode button{
-background:#00aeff;
-color:#fff;
-}
-
-.light-mode .footer{
-background:#ffffff;
-border-top:2px solid #00aeff;
-}
-
-.light-mode .footer p,
-.light-mode .footer .copy{
-color:#111;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
 }
 
 .card{
-background:#161616;
-border:2px solid #00aeff;
-border-radius:15px;
-padding:10px;
-margin-bottom:15px;
-transition:0.3s;
-
-box-shadow:
-0 0 5px #00aeff,
-0 0 10px #00aeff44;
-
-overflow:hidden;
+  background:#161616;
+  border:2px solid #00aeff;
+  border-radius:15px;
+  padding:10px;
+  transition:0.3s;
+  box-shadow:0 0 5px #00aeff,0 0 10px #00aeff44;
+  overflow:hidden;
 }
 
 .card:hover{
-transform:scale(1.03);
-
-box-shadow:
-0 0 10px #00aeff,
-0 0 20px #00aeff;
+  transform:scale(1.02);
+  box-shadow:0 0 10px #00aeff,0 0 20px #00aeff;
 }
 
 .card img{
-width:100%;
-height:120px;
-object-fit:cover;
-display:block;
-border-radius:10px;
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  display:block;
+  border-radius:10px;
 }
 
 .card h2{
-font-size:14px;
-color:#00aeff;
-margin:8px 0;
-text-align:center;
+  font-size:14px;
+  color:#00aeff;
+  margin:12px 0;
+  text-align:center;
 }
 
 .card button{
-background:#00aeff;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-font-weight:bold;
-width:100%;
-cursor:pointer;
+  background:#00aeff;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  font-weight:bold;
+  width:100%;
+  cursor:pointer;
 }
 
 .card button:hover{
-background:#0090d4;
-
-box-shadow:
-0 0 10px #00aeff,
-0 0 20px #00aeff;
+  background:#0090d4;
 }
 
-</style>
+.footer{
+  text-align:center;
+  padding:20px;
+  margin-top:30px;
+  border-top:2px solid #00aeff;
+  color:#aaa;
+  font-size:12px;
+}
 
+.light-mode{
+  background:#f5f5f5;
+  color:#111;
+}
+
+.light-mode .navbar{
+  background:white;
+}
+
+.light-mode .navmenu a{
+  background:#eee;
+  color:#111;
+}
+
+.light-mode .search-box input{
+  background:white;
+  color:#111;
+}
+
+.light-mode .card{
+  background:white;
+}
+
+.light-mode .heading p{
+  color:#555;
+}
+
+.light-mode .footer{
+  background:white;
+  color:#111;
+}
+
+@media(max-width:350px){
+  .grid{
+    gap:10px;
+  }
+  .card{
+    padding:7px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="navbar">
+  <h1>ALL STORE</h1>
 
-<h1>ALL STORE</h1>
+  <div class="navmenu">
+    <a href="index.html">Home</a>
+    <a href="topupgame.html">Game</a>
+    <a href="apkpremium.html">Premium</a>
+  </div>
 
-<div class="navmenu">
-<a href="index.html">Home</a>
-<a href="topupgame.html">Game</a>
-<a href="apkpremium.html">Premium</a>
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Cari Tagihan..."
+      onkeyup="searchCard()"
+    >
+  </div>
 </div>
 
-<div class="search-box">
-<input type="text" id="searchInput" placeholder="Cari Tagihan..." onkeyup="searchCard()">
+<div class="container">
+
+  <div class="heading">
+    <h2>PEMBAYARAN TAGIHAN</h2>
+    <p>Pilih layanan tagihan yang ingin kamu bayar</p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://i.ibb.co.com/RGkCfpTG/1782881691826.jpg" alt="PDAM">
+      <h2>PDAM</h2>
+      <button onclick="location.href='pdam.html'">
+        Order
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co.com/RGkCfpTG/1782881691826.jpg" alt="PLN">
+      <h2>PLN Pascabayar</h2>
+      <button onclick="location.href='pln.html'">
+        Order
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co.com/3yML9jL2/1782881744952.jpg" alt="BPJS">
+      <h2>BPJS Kesehatan</h2>
+      <button onclick="location.href='bpjs.html'">
+        Order
+      </button>
+    </div>
+
+    <div class="card">
+      <img src="https://i.ibb.co.com/RGkCfpTG/1782881691826.jpg" alt="PLN Nontaglis">
+      <h2>PLN Nontaglis</h2>
+      <button onclick="location.href='pln-nontaglis.html'">
+        Order
+      </button>
+    </div>
+
+  </div>
 </div>
 
-</div>
-
-<div class="grid">
-
-<div class="card">
-  <img src="https://i.ibb.co.com/MXFPzWW/1782881709880.jpg">
-<h2>PDAM</h2>
-<button onclick="window.open('https://wa.me/6281545462473?text=Halo%20saya%20mau%20Top%20Up%20PDAM%20tuan%20muda')">
-Order
-</button>
-</div>
-
-<div class="card">
-  <img src="https://i.ibb.co.com/RGkCfpTG/1782881691826.jpg">
-<h2>PLN</h2>
-<button onclick="window.open('https://wa.me/6281545462473?text=Halo%20saya%20mau%20Top%20Up%20PLN%20tuan%20muda')">
-Order
-</button>
-</div>
-
-<div class="card">
-  <img src="https://i.ibb.co.com/3yML9jL2/1782881744952.jpg">
-<h2>BPJS</h2>
-<button onclick="window.open('https://wa.me/6281545462473?text=Halo%20saya%20mau%20Top%20Up%20BPJS%20tuan%20muda')">
-Order
-</button>
-</div>
-
-</div>
-
-<footer>
-© 2026 ALL STORE - Digital Marketplace
+<footer class="footer">
+  © 2026 ALL STORE - Digital Marketplace
 </footer>
 
 <script>
-
-if(localStorage.getItem("theme")=="light"){
-document.body.classList.add("light-mode");
+if(localStorage.getItem("theme") === "light"){
+  document.body.classList.add("light-mode");
 }
 
 function searchCard(){
+  const input = document.getElementById("searchInput").value.toLowerCase();
+  const cards = document.getElementsByClassName("card");
 
-let input = document.getElementById("searchInput").value.toLowerCase();
-
-let cards = document.getElementsByClassName("card");
-
-for(let i=0; i<cards.length; i++){
-
-let title = cards[i].getElementsByTagName("h2")[0].innerText.toLowerCase();
-
-if(title.includes(input)){
-cards[i].style.display = "";
-}else{
-cards[i].style.display = "none";
+  for(let i=0;i<cards.length;i++){
+    const title = cards[i].querySelector("h2").innerText.toLowerCase();
+    cards[i].style.display = title.includes(input) ? "" : "none";
+  }
 }
-
-}
-
-}
-
 </script>
 
 </body>
-</html>
+        </html>
+        
