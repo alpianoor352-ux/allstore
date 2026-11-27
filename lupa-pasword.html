@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lupa Password - ALL STORE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0d0d0d;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.box{
+width:350px;
+max-width:100%;
+background:#171717;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,174,255,.3);
+}
+
+.logo{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#00aeff;
+margin-bottom:10px;
+}
+
+.sub{
+text-align:center;
+color:#999;
+margin-bottom:20px;
+font-size:14px;
+line-height:1.6;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+background:#252525;
+color:#fff;
+outline:none;
+}
+
+input:focus{
+box-shadow:0 0 0 1px #00aeff;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#00aeff;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+.link{
+margin-top:18px;
+text-align:center;
+}
+
+.link a{
+color:#00aeff;
+text-decoration:none;
+font-size:14px;
+}
+
+#pesan{
+display:none;
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+font-size:13px;
+line-height:1.5;
+overflow-wrap:anywhere;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="logo">ALL STORE</div>
+
+<div class="sub">
+Masukkan email akun Anda. Kami akan mengirimkan tautan untuk mengatur ulang password.
+</div>
+
+<form id="resetForm">
+
+<input
+type="email"
+id="email"
+placeholder="Masukkan email akun"
+required
+>
+
+<button type="submit" id="kirimBtn">
+Kirim Link Pemulihan
+</button>
+
+</form>
+
+<div id="pesan"></div>
+
+<div class="link">
+<a href="login.html">← Kembali ke Login</a>
+</div>
+
+</div>
+
+<script>
+const supabase = window.supabase.createClient(
+"https://sxfmmmfebcepvlwzelbi.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJzeGZtbW1mZWJjZXB2bHdadWJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDkzOTYsImV4cCI6MjEwMDc4NTM5Nn0.0uxfmCKIVkhG1Nw4wlKmfPy2hb_w4CbLxo0tDClAWM"
+);
+
+const form=document.getElementById("resetForm");
+const tombol=document.getElementById("kirimBtn");
+const pesan=document.getElementById("pesan");
+
+form.addEventListener("submit",async(e)=>{
+e.preventDefault();
+
+const email=document.getElementById("email").value.trim();
+
+tombol.disabled=true;
+tombol.textContent="Mengirim...";
+
+pesan.style.display="none";
+
+try{
+const {error}=await supabase.auth.resetPasswordForEmail(email,{
+redirectTo:window.location.origin+"/reset-password.html"
+});
+
+if(error) throw error;
+
+pesan.style.display="block";
+pesan.style.background="#12351f";
+pesan.style.color="#8dffad";
+pesan.textContent="Jika email terdaftar, tautan pemulihan akan dikirim. Periksa kotak masuk dan folder spam.";
+
+}catch(error){
+pesan.style.display="block";
+pesan.style.background="#401b1b";
+pesan.style.color="#ffaaaa";
+pesan.textContent=error.message;
+}finally{
+tombol.disabled=false;
+tombol.textContent="Kirim Link Pemulihan";
+}
+});
+</script>
+
+</body>
+  </html>
+  
