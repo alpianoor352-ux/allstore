@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steam Wallet - ALL STORE</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0d0d0d;color:white}
+.navbar{
+background:#111;padding:15px;display:flex;
+justify-content:space-between;align-items:center;
+border-bottom:2px solid #00aeff;
+box-shadow:0 0 15px #00aeff33
+}
+.logo{font-size:24px;font-weight:bold;color:#00aeff}
+.back{
+text-decoration:none;background:#00aeff;color:white;
+padding:10px 15px;border-radius:9px;font-weight:bold
+}
+.container{max-width:700px;margin:20px auto;padding:15px}
+.card{
+background:#181818;border:2px solid #00aeff;
+border-radius:15px;padding:20px;
+box-shadow:0 0 15px #00aeff22
+}
+.judul{
+display:flex;flex-direction:column;align-items:center;
+gap:10px;color:#00aeff;font-size:23px;font-weight:bold;
+text-align:center;margin-bottom:20px
+}
+.judul img{
+width:75px;height:75px;object-fit:contain;
+background:#111;border-radius:12px;padding:5px
+}
+label{
+display:block;margin:16px 0 8px;
+font-weight:bold;color:#00aeff
+}
+input,select{
+width:100%;padding:12px;background:#222;color:white;
+border:2px solid #333;border-radius:10px;
+outline:none;font-size:15px
+}
+input:focus,select:focus{border-color:#00aeff}
+.katalog-label{
+display:flex;justify-content:space-between;
+align-items:center;gap:10px;margin-top:18px
+}
+.katalog-label label{margin:0}
+#statusProduk{font-size:12px;color:#aaa;text-align:right}
+.grid-produk{
+display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+gap:10px;margin:12px 0 18px
+}
+.kartu-produk{
+width:100%;margin:0;padding:14px 10px;
+display:flex;flex-direction:column;gap:12px;
+text-align:left;color:white;background:#171522;
+border:2px solid #342a49;border-radius:14px;
+cursor:pointer
+}
+.kartu-produk.terpilih{
+border-color:#00aeff;background:#102334;
+box-shadow:0 0 10px #00aeff33
+}
+.nama-produk{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.harga-produk{color:#00d9ff;font-size:16px;font-weight:bold}
+.pilih-hint{font-size:11px;color:#aaa}
+.kosong-produk{
+grid-column:1/-1;padding:18px 12px;
+border:1px dashed #514566;border-radius:12px;
+color:#aaa;text-align:center;font-size:14px
+}
+.info-wallet{
+padding:13px;background:#111;border:1px solid #00aeff;
+border-radius:10px;margin-top:18px
+}
+#hargaTotal{
+margin-top:15px;padding:15px;background:#111;
+border:2px solid #00aeff;border-radius:10px;
+font-size:18px;font-weight:bold;color:#00ff88;text-align:center
+}
+.ringkasan{
+margin-top:20px;padding:15px;background:#111;
+border:2px solid #00aeff;border-radius:10px;line-height:1.8
+}
+.ringkasan h3{text-align:center;color:#00aeff;margin-bottom:10px}
+button{
+width:100%;padding:14px;margin-top:18px;
+background:#00aeff;color:white;font-size:16px;
+font-weight:bold;border:0;border-radius:10px;cursor:pointer
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+.peringatan{
+margin-top:20px;padding:15px;background:#2b1b00;
+border:2px solid #ffb300;border-radius:10px;
+color:#ffd54f;line-height:1.6;font-size:13px
+}
+.footer{
+text-align:center;padding:25px;color:#888;
+border-top:1px solid #222;margin-top:30px;font-size:13px
+}
+@media(max-width:360px){
+.container{padding:10px}
+.grid-produk{gap:8px}
+.kartu-produk{padding:11px 8px}
+.nama-produk{font-size:12px}
+.harga-produk{font-size:14px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="logo">ALL STORE</div>
+<a href="voucher-game.html" class="back">⬅ Kembali</a>
+</div>
+
+<div class="container">
+<div class="card">
+
+<div class="judul">
+<img src="https://i.ibb.co.com/NgxksQhP/22bf40a5886752a8de83bffc685fc601.jpg" alt="Steam Wallet">
+<span>Voucher Steam wallet</span>
+</div>
+
+<div id="formTujuan">
+<!-- Form tujuan akan dibuat otomatis dari API -->
+</div>
+
+<div class="katalog-label">
+<label>🎟️ Pilih Nominal Voucher</label>
+<span id="statusProduk">Memuat produk...</span>
+</div>
+
+<div id="gridProduk" class="grid-produk">
+<div class="kosong-produk">Memuat pilihan nominal...</div>
+</div>
+
+<div class="info-wallet">
+💳 Saldo ALL STORE:
+<strong id="walletBalance">Memuat saldo...</strong>
+<div style="font-size:12px;color:#aaa;margin-top:6px">
+Pembelian menggunakan saldo akun ALL STORE.
+</div>
+</div>
+
+<div id="hargaTotal">💰 Total Harga: Rp0</div>
+
+<div class="ringkasan">
+<h3>📋 Ringkasan Pesanan</h3>
+<p id="ringProduk">🎟️ Produk: -</p>
+<p id="ringTujuan">🆔 Tujuan: -</p>
+<p id="ringHarga">💰 Harga: Rp0</p>
+</div>
+
+  <div id="statusPesanan" style="
+display:none;
+margin:12px 0;
+padding:12px;
+border-radius:8px;
+background:#171717;
+color:#fff;
+font-size:13px;
+"></div>
+  
+<button id="pesanBtn" disabled>
+Pemesanan Belum Aktif
+</button>
+
+<div class="peringatan">
+<b>⚠️ PERHATIAN!</b><br><br>
+• Pastikan data tujuan sudah benar.<br>
+• Periksa nominal voucher sebelum memesan.<br>
+• Pastikan saldo ALL STORE mencukupi.<br>
+• Jangan melakukan pembayaran berulang ketika transaksi sedang diproses.
+</div>
+
+</div>
+</div>
+
+<footer class="footer">
+© 2026 ALL STORE - Digital Marketplace
+</footer>
+
+<script>
+const API = "https://api.allstoreid.my.id";
+const API_VOUCHER = API + "/voucher/products";
+const API_ORDER = API + "/voucher/order";
+
+const OPERATOR_ID = 28;
+
+const gridProduk = document.getElementById("gridProduk");
+const statusProduk = document.getElementById("statusProduk");
+const formTujuan = document.getElementById("formTujuan");
+const pesanBtn = document.getElementById("pesanBtn");
+const statusPesanan = document.getElementById("statusPesanan");
+
+let daftarProduk = [];
+let daftarJenis = [];
+let produkTerpilih = null;
+let dataInput = [];
+let saldoAktif = 0;
+let orderPending = null;
+let requestIdAktif = null;
+let sedangProses = false;
+
+function formatRupiah(angka) {
+  return Number(angka).toLocaleString("id-ID");
+}
+
+function hitungHargaJual(modal) {
+  return Math.ceil(Number(modal) * 1.03);
+}
+
+function buatElemen(tag, kelas, teks) {
+  const el = document.createElement(tag);
+  if (kelas) el.className = kelas;
+  if (teks !== undefined) el.textContent = teks;
+  return el;
+}
+
+function ambilToken() {
+  return sessionStorage.getItem("allstore_token");
+}
+
+function tampilStatus(pesan, warna = "#fff") {
+  statusPesanan.style.display = "block";
+  statusPesanan.style.color = warna;
+  statusPesanan.textContent = pesan;
+}
+
+function buatForm(item) {
+  formTujuan.innerHTML = "";
+  dataInput = [];
+
+  const jenis = daftarJenis.find(
+    j => Number(j.id) === Number(item.jenis_id)
+  );
+
+  let fields = jenis?.format_form;
+
+  if (!Array.isArray(fields)) fields = [];
+
+  fields = fields.filter(
+    field => field && field.label && field.name
+  );
+
+  if (fields.length === 0) {
+    fields = [{
+      name: "tujuan",
+      label: "Nomor HP / Email",
+      is_dropdown: 0,
+      data: []
+    }];
+  }
+
+  fields.forEach(field => {
+    const label = buatElemen("label", "", field.label);
+    const name = String(field.name);
+
+    let input;
+
+    if (
+      Number(field.is_dropdown) === 1 &&
+      Array.isArray(field.data) &&
+      field.data.length > 0
+    ) {
+      input = document.createElement("select");
+      input.appendChild(new Option("-- Pilih --", ""));
+
+      field.data.forEach(option => {
+        let value, text;
+
+        if (typeof option === "object") {
+          value = option.value ?? option.id ?? option.nama ?? "";
+          text = option.label ?? option.nama ?? option.name ?? value;
+        } else {
+          value = option;
+          text = option;
+        }
+
+        input.appendChild(
+          new Option(String(text), String(value))
+        );
+      });
+    } else {
+      input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = field.label;
+    }
+
+    input.name = name;
+    input.id = "tujuan_" + name;
+    input.autocomplete = "off";
+
+    input.addEventListener("input", perbaruiRingkasan);
+    input.addEventListener("change", perbaruiRingkasan);
+
+    formTujuan.appendChild(label);
+    formTujuan.appendChild(input);
+
+    dataInput.push({
+      name,
+      label: field.label,
+      element: input
+    });
+  });
+
+  perbaruiRingkasan();
+}
+
+function perbaruiRingkasan() {
+  const tujuan = dataInput
+    .map(item =>
+      item.label + ": " + item.element.value.trim()
+    )
+    .filter(item => !item.endsWith(": "))
+    .join(" | ");
+
+  document.getElementById("ringTujuan").textContent =
+    "🆔 Tujuan: " + (tujuan || "-");
+}
+
+function pilihProduk(item) {
+  if (sedangProses || orderPending) return;
+
+  produkTerpilih = item;
+
+  gridProduk.querySelectorAll(".kartu-produk").forEach(kartu => {
+    const aktif =
+      Number(kartu.dataset.id) === Number(item.id);
+
+    kartu.classList.toggle("terpilih", aktif);
+    kartu.setAttribute("aria-pressed", aktif ? "true" : "false");
+
+    const hint = kartu.querySelector(".pilih-hint");
+    if (hint) {
+      hint.textContent = aktif
+        ? "✓ Dipilih"
+        : "Ketuk untuk memilih";
+    }
+  });
+
+  document.getElementById("hargaTotal").textContent =
+    "💰 Total Harga: Rp" + formatRupiah(item.harga);
+
+  document.getElementById("ringProduk").textContent =
+    "🎟️ Produk: " + item.nama;
+
+  document.getElementById("ringHarga").textContent =
+    "💰 Harga: Rp" + formatRupiah(item.harga);
+
+  statusPesanan.style.display = "none";
+
+  buatForm(item);
+  perbaruiTombol();
+}
+
+function perbaruiTombol() {
+  if (sedangProses) {
+    pesanBtn.disabled = true;
+    pesanBtn.textContent = "Memproses...";
+    return;
+  }
+
+  if (orderPending) {
+    pesanBtn.disabled = false;
+    pesanBtn.textContent = "Cek Status Pesanan";
+    return;
+  }
+
+  pesanBtn.disabled = !produkTerpilih;
+  pesanBtn.textContent = produkTerpilih
+    ? "Pesan Sekarang"
+    : "Pilih Nominal Terlebih Dahulu";
+}
+
+async function muatProduk() {
+  try {
+    const response = await fetch(API_VOUCHER);
+
+    if (!response.ok) {
+      throw new Error("Server API " + response.status);
+    }
+
+    const hasil = await response.json();
+
+    if (
+      !hasil.success ||
+      !Array.isArray(hasil.products) ||
+      !Array.isArray(hasil.jenis)
+    ) {
+      throw new Error("Format katalog tidak sesuai");
+    }
+
+    daftarJenis = hasil.jenis.filter(
+      j => Number(j.operator_id) === OPERATOR_ID
+    );
+
+    daftarProduk = hasil.products
+      .filter(p => Number(p.operator_id) === OPERATOR_ID)
+      .map(p => ({
+        id: p.id,
+        nama: p.nama,
+        kode: p.kode_produk,
+        jenis_id: p.jenis_id,
+        modal: Number(p.price),
+        harga: hitungHargaJual(p.price)
+      }))
+      .filter(p =>
+        p.nama &&
+        p.kode &&
+        Number.isFinite(p.modal) &&
+        p.modal > 0
+      );
+
+    gridProduk.innerHTML = "";
+
+    if (daftarProduk.length === 0) {
+      gridProduk.appendChild(
+        buatElemen(
+          "div",
+          "kosong-produk",
+          "Produk Garena Shell belum tersedia."
+        )
+      );
+
+      statusProduk.textContent = "0 produk";
+      return;
+    }
+
+    statusProduk.textContent =
+      daftarProduk.length + " produk tersedia";
+
+    daftarProduk.forEach(item => {
+      const kartu = document.createElement("button");
+
+      kartu.type = "button";
+      kartu.className = "kartu-produk";
+      kartu.dataset.id = item.id;
+      kartu.setAttribute("aria-pressed", "false");
+
+      const nama = buatElemen(
+        "span", "nama-produk", item.nama
+      );
+
+      const harga = buatElemen(
+        "span",
+        "harga-produk",
+        "Rp" + formatRupiah(item.harga)
+      );
+
+      const hint = buatElemen(
+        "span",
+        "pilih-hint",
+        "Ketuk untuk memilih"
+      );
+
+      kartu.append(nama, harga, hint);
+
+      kartu.addEventListener("click", () => {
+        pilihProduk(item);
+      });
+
+      gridProduk.appendChild(kartu);
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    statusProduk.textContent = "Gagal dimuat";
+    gridProduk.innerHTML = "";
+
+    gridProduk.appendChild(
+      buatElemen(
+        "div",
+        "kosong-produk",
+        "Gagal memuat produk. Periksa koneksi lalu muat ulang halaman."
+      )
+    );
+  }
+}
+
+async function muatSaldo() {
+  const token = ambilToken();
+  const elemen = document.getElementById("walletBalance");
+
+  if (!token) {
+    elemen.textContent = "Login untuk melihat saldo";
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      API + "/wallet/balance",
+      {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    );
+
+    const hasil = await response.json();
+
+    if (!response.ok) {
+      throw new Error(hasil.message || "Gagal memuat saldo");
+    }
+
+    const saldo = Number(
+      hasil.balance ??
+      hasil.wallet?.balance ??
+      hasil.data?.balance
+    );
+
+    if (!Number.isFinite(saldo)) {
+      throw new Error("Format saldo salah");
+    }
+
+    saldoAktif = saldo;
+    elemen.textContent = "Rp" + formatRupiah(saldo);
+
+  } catch (error) {
+    elemen.textContent = "Gagal memuat saldo";
+    console.error(error);
+  }
+}
+
+function ambilDataTujuan() {
+  const tujuanField = dataInput.find(
+    item => item.name.toLowerCase() === "tujuan"
+  );
+
+  const serverField = dataInput.find(
+    item => item.name.toLowerCase() === "server_id"
+  );
+
+  const fieldTujuan = tujuanField ||
+    dataInput.find(
+      item => item.name.toLowerCase() !== "server_id"
+    );
+
+  if (!fieldTujuan) {
+    throw new Error("Kolom tujuan tidak ditemukan.");
+  }
+
+  const tujuan = fieldTujuan.element.value.trim();
+
+  if (!tujuan) {
+    fieldTujuan.element.focus();
+    throw new Error("Silakan isi " + fieldTujuan.label + ".");
+  }
+
+  const serverId = serverField
+    ? serverField.element.value.trim()
+    : "";
+
+  if (serverField && !serverId) {
+    serverField.element.focus();
+    throw new Error("Silakan isi " + serverField.label + ".");
+  }
+
+  const fieldLain = dataInput.filter(item =>
+    item !== fieldTujuan && item !== serverField
+  );
+
+  if (fieldLain.some(item => item.element.value.trim())) {
+    throw new Error(
+      "Form memiliki kolom tambahan yang belum didukung. Pesanan dibatalkan agar data tidak salah."
+    );
+  }
+
+  return { tujuan, server_id: serverId };
+}
+
+async function kirimPesanan() {
+  const token = ambilToken();
+
+  if (!token) {
+    tampilStatus(
+      "Silakan login terlebih dahulu untuk memesan.",
+      "#ffb300"
+    );
+    return;
+  }
+
+  if (!produkTerpilih) {
+    tampilStatus("Pilih nominal voucher terlebih dahulu.", "#ffb300");
+    return;
+  }
+
+  let data;
+
+  try {
+    data = ambilDataTujuan();
+  } catch (error) {
+    tampilStatus(error.message, "#ffb300");
+    return;
+  }
+
+  if (saldoAktif < produkTerpilih.harga) {
+    tampilStatus(
+      "Saldo tidak mencukupi untuk pesanan ini.",
+      "#ff5252"
+    );
+    return;
+  }
+
+  if (!requestIdAktif) {
+    requestIdAktif =
+      "VCR-" + Date.now() + "-" +
+      Math.random().toString(36).slice(2, 10);
+  }
+
+  sedangProses = true;
+  perbaruiTombol();
+
+  tampilStatus(
+    "Pesanan sedang dikirim. Mohon jangan tutup halaman...",
+    "#00aeff"
+  );
+
+  try {
+    const response = await fetch(API_ORDER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        kode_produk: produkTerpilih.kode,
+        tujuan: data.tujuan,
+        server_id: data.server_id,
+        client_request_id: requestIdAktif
+      })
+    });
+
+    const hasil = await response.json();
+    requestIdAktif = null;
+
+    if (!response.ok || !hasil.success) {
+      throw new Error(
+        hasil.message || "Pesanan gagal dikirim."
+      );
+    }
+
+    const order = hasil.order || hasil.data || hasil;
+
+    tampilkanHasilPesanan(order);
+    await muatSaldo();
+
+  } catch (error) {
+    console.error(error);
+
+    tampilStatus(
+      error.message +
+      " Jika koneksi terputus, tekan Pesan Lagi untuk mengulang permintaan yang sama.",
+      "#ffb300"
+    );
+
+  } finally {
+    sedangProses = false;
+    perbaruiTombol();
+  }
+}
+
+function tampilkanHasilPesanan(order) {
+  const status = String(order.status || "pending").toLowerCase();
+
+  if (status === "pending") {
+    orderPending = order.order_id
+      ? { order_id: order.order_id }
+      : null;
+
+    tampilStatus(
+      "⏳ PESANAN DIPROSES\n" +
+      "ID Pesanan: " + (order.order_id || "-") +
+      "\n" + (order.message || "Menunggu konfirmasi supplier."),
+      "#ffb300"
+    );
+
+    if (!orderPending) {
+      tampilStatus(
+        "Pesanan masih diproses, tetapi ID pesanan tidak ditemukan. Hubungi admin sebelum mengulang pesanan.",
+        "#ffb300"
+      );
+    }
+
+  } else if (status === "success") {
+    orderPending = null;
+
+    tampilStatus(
+      "✅ PESANAN BERHASIL\n" +
+      "ID Pesanan: " + (order.order_id || "-") +
+      "\nProduk: " + (order.product_name || "-") +
+      "\nSerial Number: " + (order.provider_sn || "-") +
+      "\n" + (order.message || "Transaksi berhasil."),
+      "#00ff88"
+    );
+
+  } else if (status === "failed") {
+    orderPending = null;
+
+    tampilStatus(
+      "❌ PESANAN GAGAL\n" +
+      "ID Pesanan: " + (order.order_id || "-") +
+      "\n" + (order.message || "Transaksi gagal."),
+      "#ff5252"
+    );
+
+  } else {
+    tampilStatus(
+      "Status pesanan: " + status +
+      "\nID Pesanan: " + (order.order_id || "-"),
+      "#ffb300"
+    );
+  }
+}
+
+async function cekStatusPesanan() {
+  if (!orderPending || !orderPending.order_id) {
+    orderPending = null;
+    perbaruiTombol();
+    return;
+  }
+
+  const token = ambilToken();
+
+  if (!token) {
+    tampilStatus("Silakan login kembali.", "#ffb300");
+    return;
+  }
+
+  sedangProses = true;
+  perbaruiTombol();
+
+  tampilStatus("Sedang memeriksa status pesanan...", "#00aeff");
+
+  try {
+    const response = await fetch(API_ORDER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        action: "check_status",
+        order_id: orderPending.order_id
+      })
+    });
+
+    const hasil = await response.json();
+
+    if (!response.ok || !hasil.success) {
+      throw new Error(
+        hasil.message || "Gagal memeriksa status."
+      );
+    }
+
+    const order = hasil.order || hasil.data || hasil;
+
+    tampilkanHasilPesanan(order);
+    await muatSaldo();
+
+  } catch (error) {
+    console.error(error);
+    tampilStatus(error.message, "#ffb300");
+
+  } finally {
+    sedangProses = false;
+    perbaruiTombol();
+  }
+}
+
+pesanBtn.addEventListener("click", () => {
+  if (sedangProses) return;
+
+  if (orderPending) {
+    cekStatusPesanan();
+  } else {
+    kirimPesanan();
+  }
+});
+
+perbaruiTombol();
+muatProduk();
+muatSaldo();
+
+</script>
+
+</body>
+</html>
+  
