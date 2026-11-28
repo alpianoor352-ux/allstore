@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>Riwayat Transaksi - ALL STORE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0d0d0d;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 18px;
+      background: #111;
+      border-bottom: 1px solid #00aeff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      color: #00aeff;
+      font-size: 21px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .heading {
+      margin: 12px 0 20px;
+    }
+
+    .heading h1 {
+      font-size: 23px;
+      margin-bottom: 7px;
+    }
+
+    .heading p {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .summary {
+      background: #161616;
+      border: 1px solid #087db2;
+      border-radius: 14px;
+      padding: 17px;
+      margin-bottom: 18px;
+    }
+
+    .summary p {
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .summary strong {
+      display: block;
+      color: #00aeff;
+      font-size: 24px;
+      margin-top: 8px;
+    }
+
+    .transaction {
+      background: #161616;
+      border: 1px solid #292929;
+      border-radius: 13px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .transaction-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .transaction-title {
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .amount {
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .income {
+      color: #36d98b;
+    }
+
+    .outcome {
+      color: #ff6969;
+    }
+
+    .neutral {
+      color: #ddd;
+    }
+
+    .transaction-info {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .date {
+      color: #888;
+      font-size: 11px;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #292929;
+      color: #ccc;
+    }
+
+    .status.success {
+      color: #36d98b;
+      background: #123326;
+    }
+
+    .status.rejected {
+      color: #ff7777;
+      background: #351919;
+    }
+
+    .status.pending {
+      color: #ffc45c;
+      background: #352b16;
+    }
+
+    .reference {
+      color: #777;
+      font-size: 11px;
+      margin-top: 9px;
+      overflow-wrap: anywhere;
+    }
+
+    .message {
+      text-align: center;
+      padding: 35px 15px;
+      color: #999;
+      font-size: 13px;
+      background: #161616;
+      border-radius: 13px;
+      border: 1px solid #292929;
+    }
+
+    .retry {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: 1px solid #00aeff;
+      background: #073047;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      padding: 25px 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>ALL STORE</h2>
+  <a href="index.html">Kembali ke toko</a>
+</header>
+
+<main class="container">
+
+  <section class="heading">
+    <h1>Riwayat Transaksi</h1>
+    <p>Catatan aktivitas saldo akun ALL STORE kamu.</p>
+  </section>
+
+  <section class="summary">
+    <p>Total aktivitas tercatat</p>
+    <strong id="totalTransactions">Memuat...</strong>
+  </section>
+
+  <section id="historyList">
+    <div class="message">Memuat riwayat transaksi...</div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 ALL STORE - Digital Marketplace
+</footer>
+
+<script>
+  const token = sessionStorage.getItem("allstore_token");
+
+  const historyList = document.getElementById("historyList");
+  const totalEl = document.getElementById("totalTransactions");
+
+  if (!token) {
+    window.location.replace("allstore-login-register.html");
+  }
+
+  function formatRupiah(amount) {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(amount);
+  }
+
+  function formatDate(dateString) {
+    const date = new Date(dateString.replace(" ", "T"));
+
+    if (isNaN(date.getTime())) return dateString;
+
+    return date.toLocaleString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function getStatus(status) {
+    const value = String(status || "").toLowerCase();
+
+    if (["success", "sukses", "completed", "approved"].includes(value)) {
+      return {
+        label: "Berhasil",
+        className: "success"
+      };
+    }
+
+    if (["rejected", "failed", "failure"].includes(value)) {
+      return {
+        label: "Ditolak / Gagal",
+        className: "rejected"
+      };
+    }
+
+    return {
+      label: "Menunggu",
+      className: "pending"
+    };
+  }
+
+  function getTransactionType(item) {
+    switch (item.category) {
+      case "topup":
+        return "Saldo Masuk";
+
+      case "purchase":
+        return "Pembayaran";
+
+      case "refund":
+        return "Pengembalian Saldo";
+
+      case "topup_request":
+        return "Permintaan Top Up";
+
+      default:
+        return "Transaksi";
+    }
+  }
+
+  function getAmountDisplay(item) {
+    const amount = Number(item.amount) || 0;
+
+    if (item.category === "topup") {
+      return {
+        text: "+ " + formatRupiah(amount),
+        className: "income"
+      };
+    }
+
+    if (item.category === "purchase") {
+      return {
+        text: "- " + formatRupiah(amount),
+        className: "outcome"
+      };
+    }
+
+    if (item.category === "refund") {
+      return {
+        text: "+ " + formatRupiah(amount),
+        className: "income"
+      };
+    }
+
+    return {
+      text: formatRupiah(amount),
+      className: "neutral"
+    };
+  }
+
+  function createTransaction(item) {
+    const status = getStatus(item.status);
+    const amount = getAmountDisplay(item);
+
+    const card = document.createElement("article");
+    card.className = "transaction";
+
+    const top = document.createElement("div");
+    top.className = "transaction-top";
+
+    const title = document.createElement("div");
+    title.className = "transaction-title";
+    title.textContent = item.title || getTransactionType(item);
+
+    const amountEl = document.createElement("div");
+    amountEl.className = "amount " + amount.className;
+    amountEl.textContent = amount.text;
+
+    top.append(title, amountEl);
+
+    const info = document.createElement("div");
+    info.className = "transaction-info";
+
+    const date = document.createElement("span");
+    date.className = "date";
+    date.textContent = formatDate(item.created_at);
+
+    const statusEl = document.createElement("span");
+    statusEl.className = "status " + status.className;
+    statusEl.textContent = status.label;
+
+    info.append(date, statusEl);
+    card.append(top, info);
+
+    const type = document.createElement("div");
+    type.className = "reference";
+    type.textContent = getTransactionType(item);
+    card.append(type);
+
+    if (item.reference_id) {
+      const reference = document.createElement("div");
+      reference.className = "reference";
+      reference.textContent = "Referensi: " + item.reference_id;
+      card.append(reference);
+    }
+
+    return card;
+  }
+
+  async function loadHistory() {
+    historyList.innerHTML =
+      '<div class="message">Memuat riwayat transaksi...</div>';
+
+    try {
+      const response = await fetch(
+        "https://api.allstoreid.my.id/transactions/history",
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        sessionStorage.removeItem("allstore_token");
+        sessionStorage.removeItem("allstore_user");
+        window.location.replace("allstore-login-register.html");
+        return;
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Gagal mengambil riwayat.");
+      }
+
+      const history = Array.isArray(data.history) ? data.history : [];
+
+      totalEl.textContent = history.length;
+
+      if (history.length === 0) {
+        historyList.innerHTML =
+          '<div class="message">Belum ada riwayat transaksi.</div>';
+        return;
+      }
+
+      historyList.innerHTML = "";
+
+      history.forEach(item => {
+        historyList.appendChild(createTransaction(item));
+      });
+
+    } catch (error) {
+      totalEl.textContent = "-";
+
+      historyList.innerHTML = "";
+
+      const message = document.createElement("div");
+      message.className = "message";
+      message.textContent =
+        error.message || "Gagal menghubungkan ke server.";
+
+      const retry = document.createElement("button");
+      retry.className = "retry";
+      retry.textContent = "Coba Lagi";
+      retry.onclick = loadHistory;
+
+      message.appendChild(document.createElement("br"));
+      message.appendChild(retry);
+
+      historyList.appendChild(message);
+    }
+  }
+
+  if (token) {
+    loadHistory();
+  }
+</script>
+
+</body>
+  </html>
+  
