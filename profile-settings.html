@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan Profil - ALL STORE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #080d18;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 35px auto;
+    }
+
+    .back {
+      color: #60a5fa;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #111c30;
+      border: 1px solid #263750;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border-radius: 9px;
+      border: 1px solid #334155;
+      background: #080d18;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #3b82f6;
+    }
+
+    input:disabled {
+      opacity: .7;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 22px;
+      border: none;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <a href="profile.html" class="back">← Kembali ke Profil</a>
+
+    <h2>Pengaturan Profil</h2>
+    <p class="subtitle">Kelola informasi akun ALL STORE kamu.</p>
+
+    <div class="card">
+      <form id="profileForm">
+        <label for="name">Nama Lengkap</label>
+        <input
+          type="text"
+          id="name"
+          minlength="2"
+          maxlength="60"
+          required
+          placeholder="Masukkan nama lengkap"
+        >
+
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          disabled
+        >
+
+        <button type="submit" id="saveButton">
+          Simpan Perubahan
+        </button>
+
+        <div id="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const token = sessionStorage.getItem("allstore_token");
+    const savedUser = sessionStorage.getItem("allstore_user");
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const message = document.getElementById("message");
+    const saveButton = document.getElementById("saveButton");
+
+    if (!token || !savedUser) {
+      window.location.replace("allstore-login-register.html");
+    } else {
+      try {
+        const user = JSON.parse(savedUser);
+        nameInput.value = user.name || user.fullName || "";
+        emailInput.value = user.email || "";
+      } catch (error) {
+        sessionStorage.removeItem("allstore_token");
+        sessionStorage.removeItem("allstore_user");
+        window.location.replace("allstore-login-register.html");
+      }
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name = nameInput.value.trim();
+
+      if (name.length < 2 || name.length > 60) {
+        message.style.color = "#f87171";
+        message.textContent = "Nama harus 2 sampai 60 karakter.";
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Menyimpan...";
+      message.textContent = "";
+
+      try {
+        const response = await fetch("https://api.allstoreid.my.id/profile/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ name })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Gagal memperbarui profil.");
+        }
+
+        const user = JSON.parse(sessionStorage.getItem("allstore_user"));
+        user.name = data.name;
+        sessionStorage.setItem("allstore_user", JSON.stringify(user));
+
+        message.style.color = "#4ade80";
+        message.textContent = "Nama profil berhasil diperbarui.";
+
+      } catch (error) {
+        message.style.color = "#f87171";
+        message.textContent = error.message || "Terjadi kesalahan.";
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Simpan Perubahan";
+      }
+    });
+  </script>
+</body>
+  </html>
+  
