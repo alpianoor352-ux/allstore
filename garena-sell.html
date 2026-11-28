@@ -124,7 +124,7 @@ border-top:1px solid #222;margin-top:30px;font-size:13px
 <div class="card">
 
 <div class="judul">
-<img id="https://i.ibb.co.com/DDG19B4d/0c37cb532949590d0a8aa84d268408b8-0684c289f00e31fe453f507a4bba80ab.png" alt="Garena Shell">
+<img src="https://i.ibb.co.com/DDG19B4d/0c37cb532949590d0a8aa84d268408b8-0684c289f00e31fe453f507a4bba80ab.png" alt="Garena Shell">
 <span>Voucher Garena Shell</span>
 </div>
 
@@ -301,6 +301,7 @@ produkTerpilih = item;
 gridProduk.querySelectorAll(".kartu-produk").forEach(kartu => {
 const aktif = Number(kartu.dataset.id) === Number(item.id);
 kartu.classList.toggle("terpilih",aktif);
+kartu.setAttribute("aria-pressed", aktif ? "true" : "false");
 
 const hint = kartu.querySelector(".pilih-hint");
 if(hint) hint.textContent = aktif ? "✓ Dipilih" : "Ketuk untuk memilih";
@@ -332,14 +333,6 @@ if(!hasil.success ||
 !Array.isArray(hasil.products) ||
 !Array.isArray(hasil.jenis)){
 throw new Error("Format katalog tidak sesuai");
-}
-
-const operator = (hasil.operators || []).find(
-o => Number(o.id) === OPERATOR_ID
-);
-
-if(operator?.logo){
-document.getElementById("logoLayanan").src = operator.logo;
 }
 
 daftarJenis = hasil.jenis.filter(
